@@ -32,6 +32,10 @@ def lcm(a, b):
     # pylint: disable=invalid-name
     return a * b / gcd(a, b)
 
+def dist_to_round(x):
+    """Return distance of ``x`` to ``round(x)``."""
+    return abs(x - round(x))
+
 class PageIterator:
     """Iterotor over pages of several pdf documents."""
     # pylint: disable=too-few-public-methods
@@ -79,11 +83,10 @@ class DestinationFile:
         """Return "wasted" space, if ``fit`` is used."""
         target_width, target_height = fit.target_size
         source_width, source_height = self.source_size
-        cell_x, cell_y = fit.cell_number
-        return abs(
-            target_width * target_height
-            -
-            (source_width * source_height) * (cell_x * cell_y),
+        return (
+            dist_to_round(target_width / source_width)**2
+            +
+            dist_to_round(target_height / source_height)**2
             )
 
     def fit(self, source_size, target_size):
