@@ -17,8 +17,10 @@
 """Manage options"""
 
 import argparse
+import textwrap
 
 from pdfautonup import VERSION
+from pdfautonup import paper
 
 def commandline_parser():
     """Return a command line parser."""
@@ -32,6 +34,37 @@ def commandline_parser():
             "as possible. If necessary, the source pages are repeated to fill "
             "all destination pages."
             ),
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=textwrap.dedent("""
+            # Paper size
+
+            ## Source
+
+            Paper size is get from the following sources (in that order):
+
+            - Argument of "--size" option;
+            - LC_PAER environment variable (read as mm);
+            - PAPERSIZE environment variable;
+            - content of file specified by the PAPERCONF environment variable;
+            - content of file /etc/papersize;
+            - output of the paperconf command;
+            - if everything else have failed, A4.
+
+            ## Recognized sizes
+
+            Paper size can be either specified by the explicit dimensions, or by the name of the size.
+
+            - Explicit dimensions are of the form WIDTHxHEIGHT, where WIDTH and HEIGHT are floating point numbers in one of the following units (default being pt): {units};
+            - Recognized paper size names are: {papersizenames}.
+            """).format(
+                units=str(", ".join([
+                    size
+                    for size
+                    in sorted(paper.UNITS.keys())
+                    if size
+                    ])),
+                papersizenames=str(", ".join(sorted(paper.PAPERSIZES.keys()))),
+                ),
         )
 
     parser.add_argument(
@@ -67,8 +100,7 @@ def commandline_parser():
     parser.add_argument(
         '--size', '-s',
         dest='target_size',
-        help='Target paper size (TODO not implemented)',
-        # TODO list available sizes in help
+        help='Target paper size (see below for accepted sizes).',
         default=None,
         nargs=1,
         action='store',

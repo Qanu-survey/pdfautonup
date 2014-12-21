@@ -31,3 +31,13 @@ class UserCancel(PdfAutoNupError):
 
     def __str__(self):
         return ""
+
+class CouldNotParse(PdfAutoNupError):
+    """Could not parse string as a paper size."""
+
+    def __init__(self, string):
+        super().__init__()
+        self.string = string
+
+    def __str__(self):
+        return "Could not parse paper size '{}'.".format(self.string)
