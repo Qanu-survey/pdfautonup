@@ -26,3 +26,9 @@ def default_paper_size():
     # - stdout of the paperconf command
 
     return (decimal.Decimal(595), decimal.Decimal(842)) # Temporary return a4
+
+def target_paper_size(source_size, target_size=None):
+    if target_size is None:
+        return default_paper_size()
+    return target_size
+

@@ -19,59 +19,13 @@
 from collections import namedtuple
 from fractions import gcd
 import PyPDF2
-import argparse
 import logging
 import os
 import sys
 
-from pdfautonup import VERSION
-from pdfautonup import errors, paper
+from pdfautonup import errors, paper, options
 
 LOGGER = logging.getLogger(__name__)
-
-def commandline_parser():
-    """Return a command line parser."""
-
-    parser = argparse.ArgumentParser(
-        description="TODO",
-        )
-
-    parser.add_argument(
-        '--version',
-        help='Show version',
-        action='version',
-        version='%(prog)s ' + VERSION
-        )
-
-    parser.add_argument(
-        'files',
-        metavar="FILES",
-        help='TODO',
-        nargs='+',
-        type=str,
-        )
-
-    parser.add_argument(
-        '--output', '-o',
-        help='Destination file. Default is "-nup" appended to first source file.',
-        type=str,
-        )
-
-    parser.add_argument(
-        '--interactive', '-i',
-        help='Ask before overwriting destination file if it exists.',
-        default=False,
-        action='store_true',
-        )
-
-    # TODO
-    # Add an option to specify a custom target paper size
-
-
-    # TODO
-    # Add an option to list available paper size names
-
-    return parser
 
 def lcm(a, b):
     return a * b / gcd(a, b)
@@ -158,24 +112,14 @@ def rectangle_size(rectangle):
             rectangle.upperRight[1] - rectangle.lowerLeft[1],
             )
 
-def target_paper_size(source_size, target_size=None):
-    if target_size is None:
-        return paper.default_paper_size()
-    return target_size
-
-def destination_name(output, source):
-    if output is None:
-        return "{}-nup.pdf".format(".".join(source.split('.')[:-1]))
-    return output
-
 def main():
     """Main function"""
-    options = commandline_parser().parse_args(sys.argv[1:])
+    arguments = options.commandline_parser().parse_args(sys.argv[1:])
 
     pages = PageIterator(*[
         PyPDF2.PdfFileReader(pdf)
         for pdf
-        in options.files
+        in arguments.files
         ])
 
     page_sizes = set([rectangle_size(page.mediaBox) for page in pages])
@@ -184,18 +128,18 @@ def main():
         raise errors.DifferentPageSizes()
 
     source_size = page_sizes.pop()
-    target_size = target_paper_size(getattr(options, 'target_size', None))
+    target_size = paper.target_paper_size(getattr(arguments, 'target_size', None))
 
     dest = DestinationFile(
             source_size,
             target_size,
-            interactive=options.interactive,
+            interactive=arguments.interactive,
             )
 
     for page in pages.repeat_iterator(lcm(dest.pages_per_page, len(pages))):
         dest.add_page(page)
 
-    dest.write(destination_name(options.output, options.files[0]))
+    dest.write(options.destination_name(arguments.output, arguments.files[0]))
 
 if __name__ == "__main__":
     main()

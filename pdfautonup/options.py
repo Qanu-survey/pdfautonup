@@ -14,4 +14,56 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>. 1
 
-# TODO move everything about options here
+import argparse
+
+from pdfautonup import VERSION
+
+def commandline_parser():
+    """Return a command line parser."""
+
+    parser = argparse.ArgumentParser(
+        description="TODO",
+        )
+
+    parser.add_argument(
+        '--version',
+        help='Show version',
+        action='version',
+        version='%(prog)s ' + VERSION
+        )
+
+    parser.add_argument(
+        'files',
+        metavar="FILES",
+        help='TODO',
+        nargs='+',
+        type=str,
+        )
+
+    parser.add_argument(
+        '--output', '-o',
+        help='Destination file. Default is "-nup" appended to first source file.',
+        type=str,
+        )
+
+    parser.add_argument(
+        '--interactive', '-i',
+        help='Ask before overwriting destination file if it exists.',
+        default=False,
+        action='store_true',
+        )
+
+    # TODO
+    # Add an option to specify a custom target paper size
+
+
+    # TODO
+    # Add an option to list available paper size names
+
+    return parser
+
+def destination_name(output, source):
+    if output is None:
+        return "{}-nup.pdf".format(".".join(source.split('.')[:-1]))
+    return output
+
