@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>. 1
 
-"""TODO"""
+"""Convert PDF files to 'n-up' PDF files, guessing the output layout."""
 
 VERSION = "0.1.0"
 __AUTHOR__ = "Louis Paternault (spalax@gresille.org)"

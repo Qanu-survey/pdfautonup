@@ -21,7 +21,13 @@ class PdfAutoNupError(Exception):
     pass
 
 class DifferentPageSizes(PdfAutoNupError):
-    pass
+    """Input files do not have the same size."""
+
+    def __str__(self):
+        return """Input files do all have the same page size."""
 
 class UserCancel(PdfAutoNupError):
-    pass
+    """Action cancelled by user."""
+
+    def __str__(self):
+        return ""

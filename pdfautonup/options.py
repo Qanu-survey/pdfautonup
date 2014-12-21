@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>. 1
 
+"""Manage options"""
+
 import argparse
 
 from pdfautonup import VERSION
@@ -22,7 +24,14 @@ def commandline_parser():
     """Return a command line parser."""
 
     parser = argparse.ArgumentParser(
-        description="TODO",
+        description=(
+            "Convert PDF files to 'n-up' file, with multiple input pages per "
+            "destination pages. The output size is a4paper (it will be "
+            "configurable in a later version), and the program compute the "
+            "page layout, to fit as much source pages in per destination pages "
+            "as possible. If necessary, the source pages are repeated to fill "
+            "all destination pages."
+            ),
         )
 
     parser.add_argument(
@@ -35,14 +44,16 @@ def commandline_parser():
     parser.add_argument(
         'files',
         metavar="FILES",
-        help='TODO',
+        help='PDF files to merge.',
         nargs='+',
         type=str,
         )
 
     parser.add_argument(
         '--output', '-o',
-        help='Destination file. Default is "-nup" appended to first source file.',
+        help=(
+            'Destination file. Default is "-nup" appended to first source file.'
+            ),
         type=str,
         )
 
@@ -53,16 +64,25 @@ def commandline_parser():
         action='store_true',
         )
 
-    # TODO
-    # Add an option to specify a custom target paper size
-
-
-    # TODO
-    # Add an option to list available paper size names
+    parser.add_argument(
+        '--size', '-s',
+        dest='target_size',
+        help='Target paper size (TODO not implemented)',
+        # TODO list available sizes in help
+        default=None,
+        nargs=1,
+        action='store',
+        )
 
     return parser
 
 def destination_name(output, source):
+    """Return the name of the destination file.
+
+    :param str output: Filename, given in command line options. May be
+        ``None`` if it was not provided.
+    :param str source: Name of the first source file.
+    """
     if output is None:
         return "{}-nup.pdf".format(".".join(source.split('.')[:-1]))
     return output

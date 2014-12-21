@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>. 1
 
+"""Paper-size related functions"""
+
 import decimal
 
 # TODO
@@ -23,6 +25,7 @@ import decimal
 # - accept several units
 
 def default_paper_size():
+    """Return the default paper size"""
     # TODO
     # What should be done: find the default papersize value from (in that order)
     # - LC_PAPER environment variable (can be read from "locale -k LC_PAPER"
@@ -33,7 +36,11 @@ def default_paper_size():
 
     return (decimal.Decimal(595), decimal.Decimal(842)) # Temporary return a4
 
-def target_paper_size(source_size, target_size=None):
+def target_paper_size(target_size):
+    """Return the target paper size.
+
+    :param str target_size: Target size, if provided by user in command line.
+    """
     if target_size is None:
         return default_paper_size()
     return target_size
