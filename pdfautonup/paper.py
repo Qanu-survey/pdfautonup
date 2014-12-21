@@ -16,6 +16,12 @@
 
 import decimal
 
+# TODO
+# Create a function parse_paper_size():
+# - accept a named size: http://www.printernational.org/iso-paper-sizes.php
+# - accept dimensions: "21cmx29.7cm"
+# - accept several units
+
 def default_paper_size():
     # TODO
     # What should be done: find the default papersize value from (in that order)
