@@ -93,8 +93,8 @@ class DestinationFile:
         destination pages.
         """
         cell_number = (
-            round(target_size[0] / source_size[0]),
-            round(target_size[1] / source_size[1]),
+            max(1, round(target_size[0] / source_size[0])),
+            max(1, round(target_size[1] / source_size[1])),
             )
         return self.Fit(cell_number, target_size)
 
