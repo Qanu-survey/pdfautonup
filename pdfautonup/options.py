@@ -26,14 +26,14 @@ def commandline_parser():
     """Return a command line parser."""
 
     parser = argparse.ArgumentParser(
-        description=(
-            "Convert PDF files to 'n-up' file, with multiple input pages per "
-            "destination pages. The output size is a4paper (it will be "
-            "configurable in a later version), and the program compute the "
-            "page layout, to fit as much source pages in per destination pages "
-            "as possible. If necessary, the source pages are repeated to fill "
-            "all destination pages."
-            ),
+        description=textwrap.dedent("""
+            Convert PDF files to 'n-up' file, with multiple input pages per
+            destination pages. The output size is a4paper (it will be
+            configurable in a later version), and the program compute the page
+            layout, to fit as much source pages in per destination pages as
+            possible. If necessary, the source pages are repeated to fill all
+            destination pages.
+            """),
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=textwrap.dedent("""
             # Paper size
@@ -43,7 +43,7 @@ def commandline_parser():
             Paper size is get from the following sources (in that order):
 
             - Argument of "--size" option;
-            - LC_PAER environment variable (read as mm);
+            - LC_PAPER environment variable (read as mm);
             - PAPERSIZE environment variable;
             - content of file specified by the PAPERCONF environment variable;
             - content of file /etc/papersize;
