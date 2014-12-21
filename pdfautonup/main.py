@@ -16,20 +16,18 @@
 
 """TODO"""
 
+from collections import namedtuple
+from fractions import gcd
+import PyPDF2
 import argparse
 import logging
+import os
 import sys
-import PyPDF2
-from fractions import gcd
-from collections import namedtuple
 
 from pdfautonup import VERSION
 from pdfautonup import errors, paper
 
 LOGGER = logging.getLogger(__name__)
-
-# TODO
-DEST = "nup.pdf"
 
 def commandline_parser():
     """Return a command line parser."""
@@ -50,7 +48,20 @@ def commandline_parser():
         metavar="FILES",
         help='TODO',
         nargs='+',
-        type=PyPDF2.PdfFileReader,
+        type=str,
+        )
+
+    parser.add_argument(
+        '--output', '-o',
+        help='Destination file. Default is "-nup" appended to first source file.',
+        type=str,
+        )
+
+    parser.add_argument(
+        '--interactive', '-i',
+        help='Ask before overwriting destination file if it exists.',
+        default=False,
+        action='store_true',
         )
 
     # TODO
@@ -59,9 +70,6 @@ def commandline_parser():
 
     # TODO
     # Add an option to list available paper size names
-
-    # TODO
-    # Add an option to force overwrite destination file
 
     return parser
 
@@ -89,9 +97,10 @@ class DestinationFile:
 
     Fit = namedtuple('Fit', ['width', 'height', 'target_size'])
 
-    def __init__(self, source_size, target_size):
+    def __init__(self, source_size, target_size, interactive=False):
 
         self.source_size = source_size
+        self.interactive = interactive
 
 
         self.width, self.height, self.target_size = min(
@@ -100,7 +109,6 @@ class DestinationFile:
                 key=self.wasted,
                 )
 
-        print(self.width, self.height)
         self.pdf = PyPDF2.PdfFileWriter()
         self.current_pagenum = 0
         self.current_page = None
@@ -139,8 +147,10 @@ class DestinationFile:
         self.current_pagenum = (self.current_pagenum + 1) % self.pages_per_page
 
     def write(self, filename):
-        # TODO Ask overwrite
-        self.pdf.write(open(filename, 'x+b'))
+        if self.interactive and os.path.exists(filename):
+            if input("File {} already exists. Overwrite? ".format(filename)).lower() != "y":
+                raise errors.UserCancel()
+        self.pdf.write(open(filename, 'w+b'))
 
 def rectangle_size(rectangle):
     return (
@@ -153,11 +163,20 @@ def target_paper_size(source_size, target_size=None):
         return paper.default_paper_size()
     return target_size
 
+def destination_name(output, source):
+    if output is None:
+        return "{}-nup.pdf".format(".".join(source.split('.')[:-1]))
+    return output
+
 def main():
     """Main function"""
     options = commandline_parser().parse_args(sys.argv[1:])
 
-    pages = PageIterator(*options.files)
+    pages = PageIterator(*[
+        PyPDF2.PdfFileReader(pdf)
+        for pdf
+        in options.files
+        ])
 
     page_sizes = set([rectangle_size(page.mediaBox) for page in pages])
 
@@ -167,12 +186,16 @@ def main():
     source_size = page_sizes.pop()
     target_size = target_paper_size(getattr(options, 'target_size', None))
 
-    dest = DestinationFile(source_size, target_size)
+    dest = DestinationFile(
+            source_size,
+            target_size,
+            interactive=options.interactive,
+            )
 
     for page in pages.repeat_iterator(lcm(dest.pages_per_page, len(pages))):
         dest.add_page(page)
 
-    dest.write(DEST)
+    dest.write(destination_name(options.output, options.files[0]))
 
 if __name__ == "__main__":
     main()

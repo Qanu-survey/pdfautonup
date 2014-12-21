@@ -22,3 +22,6 @@ class PdfAutoNupError(Exception):
 
 class DifferentPageSizes(PdfAutoNupError):
     pass
+
+class UserCancel(PdfAutoNupError):
+    pass
