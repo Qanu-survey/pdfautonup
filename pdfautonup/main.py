@@ -21,6 +21,7 @@ import logging
 import sys
 import PyPDF2
 from fractions import gcd
+from collections import namedtuple
 
 from pdfautonup import VERSION
 from pdfautonup import errors, paper
@@ -86,15 +87,35 @@ class PageIterator:
 
 class DestinationFile:
 
+    Fit = namedtuple('Fit', ['width', 'height', 'target_size'])
+
     def __init__(self, source_size, target_size):
-        self.width = 3 # TODO
-        self.height = 2 # TODO
-        self.target_size = target_size
+
         self.source_size = source_size
 
+
+        self.width, self.height, self.target_size = min(
+                self.fit(source_size, target_size),
+                self.fit(source_size, (target_size[1], target_size[0])),
+                key=self.wasted,
+                )
+
+        print(self.width, self.height)
         self.pdf = PyPDF2.PdfFileWriter()
         self.current_pagenum = 0
         self.current_page = None
+
+    def wasted(self, fit):
+        return abs(
+                fit.target_size[0]*fit.target_size[1]
+                -
+                self.source_size[0]*self.source_size[1]*fit.width*fit.height
+                )
+
+    def fit(self, source_size, target_size):
+        width = round(target_size[0] / source_size[0])
+        height = round(target_size[1] / source_size[1])
+        return self.Fit(width, height, target_size)
 
     @property
     def pages_per_page(self):
