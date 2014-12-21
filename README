@@ -1,4 +1,5 @@
-TODO Quick description
+Fit as much pages of some PDF files to a 'n-up' PDF file of a given page size,
+guessing the layout.
 
 Install
 =======
