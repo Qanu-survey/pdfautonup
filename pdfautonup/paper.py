@@ -31,7 +31,7 @@ PAPERSIZES = {
     "a1": "594mmx841mm",
     "a2": "420mmx594mm",
     "a3": "297mmx420mm",
-    "a4": "210mm27mm",
+    "a4": "210mm297mm",
     "a5": "148mmx210mm",
     "a6": "105mmx148mm",
     "a7": "74mmx105mm",
