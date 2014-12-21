@@ -3,8 +3,8 @@ TODO Quick description
 Install
 =======
 
-You can run the program without installing it using `bin/pdfautonup`. To intall
-it, run:
+You can run the program without installing it using `bin/pdfautonup`. To
+install it, run:
 
   python3 setup.py install
 
