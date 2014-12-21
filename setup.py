@@ -29,7 +29,7 @@ setup(
         include_package_data=True,
         author='Louis Paternault',
         author_email='spalax@gresille.org',
-        description='TODO',
+        description='Convert PDF files to 'n-up' PDF files, guessing the output layout.',
         #url='http://paternault.fr/informatique/prof',
         license="GPLv3 or any later version",
         #test_suite="jouets.test:suite",

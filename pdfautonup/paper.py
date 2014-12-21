@@ -144,7 +144,7 @@ def parse_paper_size(string):
     return parse_couple(string)
 
 def parse_lc_paper(string):
-    """TODO
+    """Parse LC_PAPER locale variable
 
     We assume units are milimeters.
     """
