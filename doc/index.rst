@@ -31,6 +31,11 @@ This program ``pdfautonup`` automatically does this:
 - it include source files several times is necessary, not to waste space on the
   destination file.
 
+Examples
+--------
+
+TODO add examples
+
 Download and install
 --------------------
 
