@@ -72,15 +72,19 @@ class DestinationFile:
         self.cell_number, self.target_size = min(
             self.fit(source_size, target_size),
             self.fit(source_size, (target_size[1], target_size[0])),
-            key=self.wasted,
+            key=self.ugliness,
             )
 
         self.pdf = PyPDF2.PdfFileWriter()
         self.current_pagenum = 0
         self.current_page = None
 
-    def wasted(self, fit):
-        """Return "wasted" space, if ``fit`` is used."""
+    def ugliness(self, fit):
+        """Return the "ugliness" of this ``fit``.
+
+        - A layout that fits perfectly has an ugliness of 0.
+        - The maximum ugliness is 1.
+        """
         target_width, target_height = fit.target_size
         source_width, source_height = self.source_size
         return (
