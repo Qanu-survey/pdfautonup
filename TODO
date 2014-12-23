@@ -1,1 +1,2 @@
+- Ajouter une option --repeat {fit,1} (avec un alias -1) pour ne pas répéter le document
 - unittest
