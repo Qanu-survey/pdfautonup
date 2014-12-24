@@ -22,6 +22,22 @@ import textwrap
 from pdfautonup import VERSION
 from pdfautonup import paper
 
+def repeat_type(text):
+    """Check type of '--repeat' option.
+
+    Must be either a positive integer, or 'fit' or 'auto'.
+    """
+    if text in ['auto', 'fit']:
+        return text
+    try:
+        if int(text) > 0:
+            return int(text)
+        else:
+            raise ValueError
+    except ValueError:
+        raise argparse.ArgumentTypeError(textwrap.dedent("""
+        Argument must be either 'fit' or 'auto', or a positive integer.
+        """))
 def commandline_parser():
     """Return a command line parser."""
 
@@ -103,6 +119,21 @@ def commandline_parser():
         help='Target paper size (see below for accepted sizes).',
         default=None,
         nargs=1,
+        action='store',
+        )
+
+    parser.add_argument(
+        '--repeat', '-r',
+        help=textwrap.dedent("""
+        Number of times the input files have to be repeated. Possible values are:
+        - an integer;
+        - 'fit': the input files are repeated enough time to leave no blank
+          space in the output file.
+        - 'auto': if there is only one input page, equivalent to 'fit'; else,
+          equivalent to 1.
+        """),
+        type=repeat_type,
+        default='auto',
         action='store',
         )
 

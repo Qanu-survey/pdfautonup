@@ -53,7 +53,7 @@ class PageIterator:
 
     def repeat_iterator(self, num):
         """Iterator over pages, repeated ``num`` times."""
-        for __dummy in range(int(num)//len(self)):
+        for __dummy in range(int(num)):
             yield from self
 
 class DestinationFile:
@@ -176,7 +176,16 @@ def nup(arguments):
         interactive=arguments.interactive,
         )
 
-    for page in pages.repeat_iterator(lcm(dest.pages_per_page, len(pages))):
+    if arguments.repeat == 'auto':
+        if len(pages) == 1:
+            arguments.repeat = 'fit'
+        else:
+            arguments.repeat = 1
+    if type(arguments.repeat) == int:
+        repeat = arguments.repeat
+    elif arguments.repeat == 'fit':
+        repeat = lcm(dest.pages_per_page, len(pages)) // len(pages)
+    for page in pages.repeat_iterator(repeat):
         dest.add_page(page)
 
     dest.write(options.destination_name(arguments.output, arguments.files[0]))

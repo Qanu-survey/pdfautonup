@@ -1,8 +1,8 @@
 Welcome to `PdfAutoNup`'s documentation!
 ========================================
 
-Fit as much pages of some PDF files to a 'n-up' PDF file of a given page size,
-guessing the layout.
+Render PDF files to a 'n-up' PDF file of a given page size, guessing the
+layout.
 
 
 This program is similar to ``pdfnup`` (from package `pdfjam
@@ -11,8 +11,8 @@ with the following difference:
 
 - ``pdfnup`` is focused on layout: "I want my pdf to appear 'n-upped' on a
   '2x3' layout".
-- ``pdfautonup`` is focused on destination paper size: "I want to fit as many
-  pages as possible on a pdf of a given page size".
+- ``pdfautonup`` is focused on destination paper size: "I want to fit pages on
+  a pdf of a given page size".
 
 Rationale
 ---------
@@ -27,7 +27,7 @@ and given to my students. I was tired of:
 
 This program ``pdfautonup`` automatically does this:
 
-- it fits as many source pages as possible in one destination page;
+- it fits source pages in one destination page;
 - it include source files several times is necessary, not to waste space on the
   destination file.
 
