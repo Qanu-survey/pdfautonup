@@ -25,17 +25,17 @@ setup(
         name='PdfAutoNup',
         version=VERSION,
         packages=find_packages(),
-        install_requires=[],
+        install_requires=[], # TODO
         include_package_data=True,
         author='Louis Paternault',
         author_email='spalax@gresille.org',
         description='Convert PDF files to 'n-up' PDF files, guessing the output layout.',
-        #url='http://paternault.fr/informatique/prof',
+        #url='http://paternault.fr/informatique/prof', # TODO
         license="GPLv3 or any later version",
         #test_suite="jouets.test:suite",
         entry_points={
             'console_scripts': ['pdfautonup = pdfautonup.main:main']
             },
-        #classifiers=[],
-        #long_description=""
+        #classifiers=[], # TODO
+        #long_description="" # TODO
 )
