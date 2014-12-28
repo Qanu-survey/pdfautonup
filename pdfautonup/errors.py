@@ -17,7 +17,7 @@
 """Errors and exceptions"""
 
 class PdfAutoNupError(Exception):
-    """Generic error for scal"""
+    """Generic error for pdfautonup"""
     pass
 
 class DifferentPageSizes(PdfAutoNupError):
