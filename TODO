@@ -2,3 +2,5 @@
 - Write requirements.txt
 - unittest
 - Test installation
+- Change date in changelog
+- publish version 0.1.0
