@@ -18,14 +18,25 @@
 """Installateur"""
 
 from setuptools import setup, find_packages
+import os
 
 from pdfautonup import VERSION
+
+def readme():
+    directory = os.path.dirname(os.path.join(
+        os.getcwd(),
+        __file__,
+        ))
+    return open(os.path.join(directory, "README"), "r").read()
 
 setup(
         name='PdfAutoNup',
         version=VERSION,
         packages=find_packages(),
-        install_requires=[], # TODO
+        setup_requires=["hgtools"],
+        install_requires=[
+            "PyPDF2",
+            ],
         include_package_data=True,
         author='Louis Paternault',
         author_email='spalax@gresille.org',
@@ -36,6 +47,13 @@ setup(
         entry_points={
             'console_scripts': ['pdfautonup = pdfautonup.main:main']
             },
-        #classifiers=[], # TODO
-        #long_description="" # TODO
+        classifiers=[
+            "Development Status :: 4 - Beta",
+            "Environment :: Console",
+            "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python :: 3 :: Only",
+            "Topic :: Printing",
+            ],
+        long_description=readme(),
 )
