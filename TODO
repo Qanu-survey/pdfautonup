@@ -1,3 +1,4 @@
+- Séparer papersize en une bibliothèque indépendante
 - Find TODOs
 - unittest
 - Change date in changelog
