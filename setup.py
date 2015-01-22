@@ -23,6 +23,7 @@ import os
 from pdfautonup import VERSION
 
 def readme():
+    """Return the content of file README."""
     directory = os.path.dirname(os.path.join(
         os.getcwd(),
         __file__,
@@ -30,31 +31,31 @@ def readme():
     return open(os.path.join(directory, "README"), "r").read()
 
 setup(
-        name='PdfAutoNup',
-        version=VERSION,
-        packages=find_packages(),
-        setup_requires=["hgtools"],
-        install_requires=[
-            "PyPDF2",
-            "papersize",
-            ],
-        include_package_data=True,
-        author='Louis Paternault',
-        author_email='spalax@gresille.org',
-        description="Convert PDF files to 'n-up' PDF files, guessing the output layout.",
-        #url='http://paternault.fr/informatique/prof', # TODO
-        license="GPLv3 or any later version",
-        #test_suite="jouets.test:suite",
-        entry_points={
-            'console_scripts': ['pdfautonup = pdfautonup.main:main']
-            },
-        classifiers=[
-            "Development Status :: 4 - Beta",
-            "Environment :: Console",
-            "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-            "Operating System :: OS Independent",
-            "Programming Language :: Python :: 3 :: Only",
-            "Topic :: Printing",
-            ],
-        long_description=readme(),
+    name='PdfAutoNup',
+    version=VERSION,
+    packages=find_packages(),
+    setup_requires=["hgtools"],
+    install_requires=[
+        "PyPDF2",
+        "papersize",
+        ],
+    include_package_data=True,
+    author='Louis Paternault',
+    author_email='spalax@gresille.org',
+    description="Convert PDF files to 'n-up' PDF files, guessing the output layout.",
+    #url='http://paternault.fr/informatique/prof', # TODO
+    license="GPLv3 or any later version",
+    #test_suite="jouets.test:suite",
+    entry_points={
+        'console_scripts': ['pdfautonup = pdfautonup.main:main']
+        },
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Environment :: Console",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3 :: Only",
+        "Topic :: Printing",
+        ],
+    long_description=readme(),
 )
