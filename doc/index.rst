@@ -34,7 +34,10 @@ This program ``pdfautonup`` automatically does this:
 Examples
 --------
 
-TODO add examples
+With default options, my default paper size being A4, ``pdfautonup`` on:
+
+- :download:`example1.pdf <../examples/example1.pdf>` gives :download:`example1-nup.pdf <../examples/example1-nup.pdf>`
+- :download:`example2.pdf <../examples/example2.pdf>` gives :download:`example2-nup.pdf <../examples/example2-nup.pdf>`
 
 Download and install
 --------------------
