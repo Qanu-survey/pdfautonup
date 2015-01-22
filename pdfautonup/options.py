@@ -17,10 +17,10 @@
 """Manage options"""
 
 import argparse
+import papersize
 import textwrap
 
 from pdfautonup import VERSION
-from pdfautonup import paper
 
 def repeat_type(text):
     """Check type of '--repeat' option.
@@ -44,11 +44,10 @@ def commandline_parser():
     parser = argparse.ArgumentParser(
         description=textwrap.dedent("""
             Convert PDF files to 'n-up' file, with multiple input pages per
-            destination pages. The output size is a4paper (it will be
-            configurable in a later version), and the program compute the page
-            layout, to fit as much source pages in per destination pages as
-            possible. If necessary, the source pages are repeated to fill all
-            destination pages.
+            destination pages. The output size is configurable, and the program
+            compute the page layout, to fit as much source pages in per
+            destination pages as possible. If necessary, the source pages are
+            repeated to fill all destination pages.
             """),
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=textwrap.dedent("""
@@ -76,10 +75,10 @@ def commandline_parser():
                 units=str(", ".join([
                     size
                     for size
-                    in sorted(paper.UNITS.keys())
+                    in sorted(papersize.UNITS.keys())
                     if size
                     ])),
-                papersizenames=str(", ".join(sorted(paper.PAPERSIZES.keys()))),
+                papersizenames=str(", ".join(sorted(papersize.SIZES.keys()))),
                 ),
         )
 

@@ -23,7 +23,7 @@ import logging
 import os
 import sys
 
-from pdfautonup import errors, paper, options
+from pdfautonup import errors, options, paper
 
 LOGGER = logging.getLogger(__name__)
 
@@ -168,7 +168,7 @@ def nup(arguments):
         raise errors.DifferentPageSizes()
 
     source_size = page_sizes.pop()
-    target_size = paper.target_paper_size(arguments.target_size)
+    target_size = paper.target_papersize(arguments.target_size)
 
     dest = DestinationFile(
         source_size,

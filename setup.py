@@ -36,6 +36,7 @@ setup(
         setup_requires=["hgtools"],
         install_requires=[
             "PyPDF2",
+            "papersize",
             ],
         include_package_data=True,
         author='Louis Paternault',
