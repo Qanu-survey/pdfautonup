@@ -20,12 +20,6 @@ class PdfAutoNupError(Exception):
     """Generic error for pdfautonup"""
     pass
 
-class DifferentPageSizes(PdfAutoNupError):
-    """Input files do not have the same size."""
-
-    def __str__(self):
-        return """Input files do all have the same page size."""
-
 class UserCancel(PdfAutoNupError):
     """Action cancelled by user."""
 

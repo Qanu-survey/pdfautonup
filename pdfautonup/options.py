@@ -92,7 +92,11 @@ def commandline_parser():
     parser.add_argument(
         'files',
         metavar="FILES",
-        help='PDF files to merge.',
+        help=(
+            'PDF files to merge. If their page sizes are different, they are '
+            'considered to have the same page size, which is the maximum width '
+            'and height of all pages.'
+            ),
         nargs='+',
         type=str,
         )

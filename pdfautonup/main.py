@@ -162,12 +162,8 @@ def nup(arguments):
         in arguments.files
         ])
 
-    page_sizes = set([rectangle_size(page.mediaBox) for page in pages])
-
-    if len(page_sizes) != 1:
-        raise errors.DifferentPageSizes()
-
-    source_size = page_sizes.pop()
+    page_sizes = list(zip(*[rectangle_size(page.mediaBox) for page in pages]))
+    source_size = (max(page_sizes[0]), max(page_sizes[1]))
     target_size = paper.target_papersize(arguments.target_size)
 
     dest = DestinationFile(
