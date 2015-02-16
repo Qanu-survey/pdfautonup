@@ -16,6 +16,7 @@
 
 """Main function for the command."""
 
+from PyPDF2.generic import NameObject, createStringObject
 from collections import namedtuple
 from fractions import gcd
 import PyPDF2
@@ -40,7 +41,7 @@ class PageIterator:
     """Iterotor over pages of several pdf documents."""
     # pylint: disable=too-few-public-methods
 
-    def __init__(self, *files):
+    def __init__(self, files):
         self.files = files
 
     def __iter__(self):
@@ -56,6 +57,29 @@ class PageIterator:
         for __dummy in range(int(num)):
             yield from self
 
+def _aggregate_metadata(files):
+    """Aggregate metadat from input files.
+    """
+    input_info = [file.getDocumentInfo() for file in files]
+    output_info = PyPDF2.pdf.DocumentInformation()
+
+    if len(files) == 1:
+        return input_info[0]
+
+    for key in ["/Title", "/Author", "/Keywords", "/Creator", "/Subject"]:
+        values = set([
+            data[key]
+            for data
+            in input_info
+            if (key in data and data[key])
+            ])
+        if len(values):
+            value = ', '.join(['“{}”'.format(item) for item in values])
+            if len(values) != len(files):
+                value += ", and maybe others."
+            output_info[NameObject(key)] = createStringObject(value)
+    return output_info
+
 class DestinationFile:
     """Destination pdf file"""
 
@@ -63,7 +87,7 @@ class DestinationFile:
     #: in it, per width and height (``cell_number[0]`` and ``cell_number[1]``).
     Fit = namedtuple('Fit', ['cell_number', 'target_size'])
 
-    def __init__(self, source_size, target_size, interactive=False):
+    def __init__(self, source_size, target_size, metadata=None, interactive=False):
 
         self.source_size = source_size
         self.interactive = interactive
@@ -78,6 +102,9 @@ class DestinationFile:
         self.pdf = PyPDF2.PdfFileWriter()
         self.current_pagenum = 0
         self.current_page = None
+
+        if metadata:
+            self._set_metadata(metadata)
 
     def ugliness(self, fit):
         """Return the "ugliness" of this ``fit``.
@@ -147,6 +174,24 @@ class DestinationFile:
                 raise errors.UserCancel()
         self.pdf.write(open(filename, 'w+b'))
 
+    def _set_metadata(self, metadata):
+        """Set metadata on current pdf."""
+        #Source:
+        #    http://two.pairlist.net/pipermail/reportlab-users/2009-November/009033.html
+        try:
+            # pylint: disable=protected-access, no-member
+            # Since we are accessing to a protected membre, which can no longer exist
+            # in a future version of PyPDF2, we prevent errors.
+            infodict = self.pdf._info.getObject()
+            infodict.update(metadata)
+            infodict.update({
+                NameObject('/Producer'): createStringObject(
+                    'PdfAutoNup, using the PyPDF2 library — http://TODO'
+                    )
+            })
+        except AttributeError:
+            LOGGER.warning("Could not copy metadata from source document.")
+
 def rectangle_size(rectangle):
     """Return the dimension of rectangle (width, height)."""
     return (
@@ -156,11 +201,12 @@ def rectangle_size(rectangle):
 
 def nup(arguments):
     """Build destination file."""
-    pages = PageIterator(*[
+    input_files = [
         PyPDF2.PdfFileReader(pdf)
         for pdf
         in arguments.files
-        ])
+        ]
+    pages = PageIterator(input_files)
 
     page_sizes = list(zip(*[rectangle_size(page.mediaBox) for page in pages]))
     source_size = (max(page_sizes[0]), max(page_sizes[1]))
@@ -170,6 +216,7 @@ def nup(arguments):
         source_size,
         target_size,
         interactive=arguments.interactive,
+        metadata=_aggregate_metadata(input_files),
         )
 
     if arguments.repeat == 'auto':
