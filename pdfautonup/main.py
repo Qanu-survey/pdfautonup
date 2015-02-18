@@ -25,8 +25,10 @@ import os
 import sys
 
 from pdfautonup import errors, options, paper
+import pdfautonup
 
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger(pdfautonup.__name__)
+LOGGER.addHandler(logging.StreamHandler())
 
 def lcm(a, b):
     """Return least common divisor of arguments"""
