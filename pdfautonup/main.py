@@ -56,7 +56,7 @@ class PageIterator:
 
     def repeat_iterator(self, num):
         """Iterator over pages, repeated ``num`` times."""
-        for __dummy in range(int(num)):
+        for __ignored in range(int(num)):
             yield from self
 
 def _aggregate_metadata(files):
