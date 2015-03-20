@@ -20,8 +20,6 @@
 from setuptools import setup, find_packages
 import os
 
-from pdfautonup import VERSION
-
 def readme():
     """Return the content of file README."""
     directory = os.path.dirname(os.path.join(
@@ -32,7 +30,7 @@ def readme():
 
 setup(
     name='PdfAutoNup',
-    version=VERSION,
+    version="0.1.0",
     packages=find_packages(),
     setup_requires=["hgtools"],
     install_requires=[
@@ -43,7 +41,7 @@ setup(
     author='Louis Paternault',
     author_email='spalax@gresille.org',
     description="Convert PDF files to 'n-up' PDF files, guessing the output layout.",
-    #url='http://paternault.fr/informatique/prof', # TODO
+    url='https://git.framasoft.org/spalax/pdfautonup',
     license="GPLv3 or any later version",
     #test_suite="jouets.test:suite",
     entry_points={
