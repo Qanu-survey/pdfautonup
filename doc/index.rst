@@ -42,21 +42,8 @@ With default options, my default paper size being A4, ``pdfautonup`` on:
 Download and install
 --------------------
 
-* Download: http://TODO/pdfautonup-TODO.tar.gz.
-* Install (in a `virtualenv`, not to mess with your distribution installation system):
-
-    * With `pip`:
-
-        .. code-block:: shell
-
-            pip install TODO/pdfautonup-TODO.tar.gz
-
-    * Without `pip`: Download and unpack package, and run:
-
-        .. code-block:: shell
-
-            python3 setup.py install
-
+See the `main project page <http://git.framasoft.org/spalax/pdfautonup>`_ for
+instructions.
 
 Usage
 -----
