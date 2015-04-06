@@ -1,11 +1,3 @@
-#[MASTER]
-#persistent=no
-#
-[REPORTS]
-output-format=colorized
-#include-ids=yes
-#reports=yes
-
 [VARIABLES]
 #dummy-variables-rgx=([^_]+_)|dummy
 dummy-variables-rgx=__|dummy

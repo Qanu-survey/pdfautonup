@@ -226,7 +226,7 @@ def nup(arguments):
             arguments.repeat = 'fit'
         else:
             arguments.repeat = 1
-    if type(arguments.repeat) == int:
+    if isinstance(arguments.repeat, int):
         repeat = arguments.repeat
     elif arguments.repeat == 'fit':
         repeat = lcm(dest.pages_per_page, len(pages)) // len(pages)
