@@ -6,6 +6,14 @@ pdfautonup — n-up the pages of pdf files, guessing layout
 Fit as much pages of some PDF files to a 'n-up' PDF file of a given page size,
 guessing the layout.
 
+Examples
+--------
+
+With default options (my default paper size being A4) ``pdfautonup`` on:
+
+- :download:`example1.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example1.pdf>` gives :download:`example1-nup.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example1-nup.pdf>`
+- :download:`example2.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example2.pdf>` gives :download:`example2-nup.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example2-nup.pdf>`
+
 Download and install
 --------------------
 

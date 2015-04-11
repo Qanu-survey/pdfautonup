@@ -5,9 +5,10 @@ Render PDF files to a 'n-up' PDF file of a given page size, guessing the
 layout.
 
 
-This program is similar to ``pdfnup`` (from package `pdfjam
-<http://www2.warwick.ac.uk/fac/sci/statistics/staff/academic-research/firth/software/pdfjam/>`_),
-with the following difference:
+This program is similar to `pdfnup
+<http://www2.warwick.ac.uk/fac/sci/statistics/staff/academic-research/firth/software/pdfjam/>`__
+or `pdfnup <https://pypi.python.org/pypi/pdfnup/0.4.1>`__ (yes, same name) with
+the following difference:
 
 - ``pdfnup`` is focused on layout: "I want my pdf to appear 'n-upped' on a
   '2x3' layout".
