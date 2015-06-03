@@ -50,7 +50,7 @@ setup(
     description="Convert PDF files to 'n-up' PDF files, guessing the output layout.",
     url='https://git.framasoft.org/spalax/pdfautonup',
     license="GPLv3 or any later version",
-    #test_suite="jouets.test:suite",
+    #test_suite="test.suite",
     entry_points={
         'console_scripts': ['pdfautonup = pdfautonup.main:main']
         },
