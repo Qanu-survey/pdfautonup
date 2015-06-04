@@ -188,7 +188,8 @@ class DestinationFile:
             infodict.update(metadata)
             infodict.update({
                 NameObject('/Producer'): createStringObject(
-                    'PdfAutoNup, using the PyPDF2 library — http://git.framasoft.org/spalax/pdfautonup'
+                    'PdfAutoNup, using the PyPDF2 library — '
+                    'http://git.framasoft.org/spalax/pdfautonup'
                     )
             })
         except AttributeError:
