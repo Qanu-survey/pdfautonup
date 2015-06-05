@@ -11,8 +11,14 @@ Examples
 
 With default options (my default paper size being A4) ``pdfautonup`` on:
 
-- :download:`example1.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example1.pdf>` gives :download:`example1-nup.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example1-nup.pdf>`
-- :download:`example2.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example2.pdf>` gives :download:`example2-nup.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example2-nup.pdf>`
+- `example1.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example1.pdf>`_ gives `example1-nup.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example1-nup.pdf>`_
+- `example2.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example2.pdf>`_ gives `example2-nup.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/example2-nup.pdf>`_
+
+What's new?
+-----------
+
+See `changelog
+<https://git.framasoft.org/spalax/pdfautonup/blob/master/CHANGELOG>`_.
 
 Download and install
 --------------------

@@ -44,7 +44,8 @@ Download and install
 --------------------
 
 See the `main project page <http://git.framasoft.org/spalax/pdfautonup>`_ for
-instructions.
+instructions, and `changelog
+<https://git.framasoft.org/spalax/pdfautonup/blob/master/CHANGELOG>`_.
 
 Usage
 -----
