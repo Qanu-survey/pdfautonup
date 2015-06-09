@@ -204,11 +204,13 @@ def rectangle_size(rectangle):
 
 def nup(arguments):
     """Build destination file."""
-    input_files = [
-        PyPDF2.PdfFileReader(pdf)
-        for pdf
-        in arguments.files
-        ]
+    input_files = list()
+    for pdf in arguments.files:
+        try:
+            input_files.append(PyPDF2.PdfFileReader(pdf))
+        except (FileNotFoundError, PyPDF2.utils.PdfReadError, PermissionError) as error:
+            raise errors.InputFileError(pdf, error)
+
     pages = PageIterator(input_files)
 
     page_sizes = list(zip(*[rectangle_size(page.mediaBox) for page in pages]))
