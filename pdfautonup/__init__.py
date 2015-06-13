@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright Louis Paternault 2011-2014
+# Copyright Louis Paternault 2014-2015
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
 
 """Convert PDF files to 'n-up' PDF files, guessing the output layout."""
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 __AUTHOR__ = "Louis Paternault (spalax@gresille.org)"
-__COPYRIGHT__ = "(C) 2014 Louis Paternault. GNU GPL 3 or later."
+__COPYRIGHT__ = "(C) 2014-2015 Louis Paternault. GNU GPL 3 or later."
 

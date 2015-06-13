@@ -37,7 +37,7 @@ def readme():
 
 setup(
     name='PdfAutoNup',
-    version="0.1.0",
+    version="0.1.1",
     packages=find_packages(exclude=["test*"]),
     setup_requires=["hgtools"],
     install_requires=[
