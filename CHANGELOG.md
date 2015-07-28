@@ -6,10 +6,10 @@
   * Added project URL to generated pdf metadata
   * Several minor improvements to setup, test and documentation.
 
-  -- Louis Paternault <spalax@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 0.1.0 (2015-03-20)
 
   * First published version.
 
-  -- Louis Paternault <spalax@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
