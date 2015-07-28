@@ -1,4 +1,4 @@
-pdfautonup 0.1.1 (Sat Jun 13 21:52:18 CEST 2015)
+* pdfautonup 0.1.1 (2015-06-13)
 
   * Python3.5 support
   * In case of unreadable file (corrupted PDF, not a PDF, no-existant, etc.),
@@ -6,10 +6,10 @@ pdfautonup 0.1.1 (Sat Jun 13 21:52:18 CEST 2015)
   * Added project URL to generated pdf metadata
   * Several minor improvements to setup, test and documentation.
 
-  -- Louis
+  -- Louis Paternault <spalax@gresille.org>
 
-pdfautonup 0.1.0 (2015/03/20)
+* pdfautonup 0.1.0 (2015-03-20)
 
   * First published version.
 
-  -- Louis
+  -- Louis Paternault <spalax@gresille.org>
