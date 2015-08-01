@@ -87,7 +87,7 @@ def target_papersize(target_size):
             ["paperconf"],
             universal_newlines=True,
             ).strip())
-    except (subprocess.CalledProcessError, errors.CouldNotParse):
+    except (FileNotFoundError, subprocess.CalledProcessError, errors.CouldNotParse):
         pass
 
     # Eventually, if everything else has failed, a4

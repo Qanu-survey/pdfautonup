@@ -1,3 +1,9 @@
+* pdfautonup 0.1.2 (UNRELEASED)
+
+  * Fix error when `paperconf` is not installed (closes #3)
+
+    -- Louis Paternault <spalax@gresille.org>
+
 * pdfautonup 0.1.1 (2015-06-13)
 
   * Python3.5 support
