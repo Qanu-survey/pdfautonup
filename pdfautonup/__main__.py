@@ -60,8 +60,7 @@ class PageIterator:
             yield from self
 
 def _aggregate_metadata(files):
-    """Aggregate metadat from input files.
-    """
+    """Aggregate metadata from input files."""
     input_info = [file.getDocumentInfo() for file in files]
     output_info = PyPDF2.pdf.DocumentInformation()
 
