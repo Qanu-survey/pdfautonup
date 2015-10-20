@@ -18,8 +18,8 @@ the following difference:
 Rationale
 ---------
 
-As a teacher, I often write A5 (or some weirder format) documents, to be copied
-and given to my students. I was tired of:
+As a teacher, I often write A5 (or some weirder format) documents, to be
+printed on a4 paper, copied and given to my students. I was tired of:
 
 - having to explicitely specify the arguments to ``pdfnup`` (since it can be
   guessed given the source file format);
