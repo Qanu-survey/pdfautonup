@@ -42,6 +42,7 @@ def commandline_parser():
     """Return a command line parser."""
 
     parser = argparse.ArgumentParser(
+        prog="pdfautonup",
         description=textwrap.dedent("""
             Convert PDF files to 'n-up' file, with multiple input pages per
             destination pages. The output size is configurable, and the program

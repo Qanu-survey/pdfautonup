@@ -52,7 +52,7 @@ setup(
     license="GPLv3 or any later version",
     test_suite="test.suite",
     entry_points={
-        'console_scripts': ['pdfautonup = pdfautonup.main:main']
+        'console_scripts': ['pdfautonup = pdfautonup.__main__:main']
         },
     classifiers=[
         "Development Status :: 4 - Beta",
