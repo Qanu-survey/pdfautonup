@@ -201,12 +201,24 @@ def rectangle_size(rectangle):
         rectangle.upperRight[1] - rectangle.lowerLeft[1],
         )
 
+def add_extension(filename):
+    """Return the argument, with the `.pdf` extension if missing.
+
+    If `filename` does not exist, but `filename.pdf` does exist, return the
+    latter. Otherwise (even if it does not exist), return the former.
+    """
+    if not os.path.exists(filename):
+        extended = "{}.pdf".format(filename)
+        if os.path.exists(extended):
+            return extended
+    return filename
+
 def nup(arguments):
     """Build destination file."""
     input_files = list()
     for pdf in arguments.files:
         try:
-            input_files.append(PyPDF2.PdfFileReader(pdf))
+            input_files.append(PyPDF2.PdfFileReader(add_extension(pdf)))
         except (FileNotFoundError, PyPDF2.utils.PdfReadError, PermissionError) as error:
             raise errors.InputFileError(pdf, error)
 
@@ -235,7 +247,7 @@ def nup(arguments):
     for page in pages.repeat_iterator(repeat):
         dest.add_page(page)
 
-    dest.write(options.destination_name(arguments.output, arguments.files[0]))
+    dest.write(options.destination_name(arguments.output, add_extension(arguments.files[0])))
 
 def main():
     """Main function"""

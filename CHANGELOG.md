@@ -1,6 +1,7 @@
 * pdfautonup 0.1.2 (UNRELEASED)
 
-    * Fix error when `paperconf` is not installed (closes #3)
+    * Fix error when `paperconf` is not installed (closes #3).
+    * Add `.pdf` to argument if missing (closes #4).
 
     -- Louis Paternault <spalax@gresille.org>
 
