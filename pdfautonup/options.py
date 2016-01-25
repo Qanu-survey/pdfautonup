@@ -17,8 +17,9 @@
 """Manage options"""
 
 import argparse
-import papersize
 import textwrap
+
+import papersize
 
 from pdfautonup import VERSION
 

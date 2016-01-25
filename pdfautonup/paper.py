@@ -17,8 +17,9 @@
 """Paper-size related functions"""
 
 import os
-import papersize
 import subprocess
+
+import papersize
 
 from pdfautonup import errors
 

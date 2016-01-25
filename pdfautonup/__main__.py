@@ -16,13 +16,14 @@
 
 """Main function for the command."""
 
-from PyPDF2.generic import NameObject, createStringObject
 from collections import namedtuple
 from fractions import gcd
-import PyPDF2
 import logging
 import os
 import sys
+
+from PyPDF2.generic import NameObject, createStringObject
+import PyPDF2
 
 from pdfautonup import errors, options, paper
 import pdfautonup
@@ -239,7 +240,7 @@ def nup(arguments):
         if len(pages) == 1:
             arguments.repeat = 'fit'
         else:
-            arguments.repeat = 1
+            arguments.repeat = 1 # pylint: disable=redefined-variable-type
     if isinstance(arguments.repeat, int):
         repeat = arguments.repeat
     elif arguments.repeat == 'fit':
