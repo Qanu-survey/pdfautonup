@@ -1,5 +1,6 @@
 * pdfautonup 0.1.2 (UNRELEASED)
 
+    * Can be called as a python module : `python3 -m pdfautonup FOO` is equivalent to `pdfautonup FOO`.
     * Fix error when `paperconf` is not installed (closes #3).
     * Add `.pdf` to argument if missing (closes #4).
 
