@@ -17,7 +17,7 @@
 """Main function for the command."""
 
 from collections import namedtuple
-from fractions import gcd
+from math import gcd
 import logging
 import os
 import sys
@@ -228,6 +228,8 @@ def nup(arguments):
     page_sizes = list(zip(*[rectangle_size(page.mediaBox) for page in pages]))
     source_size = (max(page_sizes[0]), max(page_sizes[1]))
     target_size = paper.target_papersize(arguments.target_size)
+    min_gap = arguments.min_gap[0]
+    min_margin = arguments.min_margin[0]
 
     dest = DestinationFile(
         source_size,
