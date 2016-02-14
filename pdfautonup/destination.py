@@ -1,0 +1,168 @@
+# Copyright Louis Paternault 2011-2016
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>. 1
+
+"""Different algorithm to fit source files into destination files."""
+
+from collections import namedtuple
+import logging
+import os
+
+from PyPDF2.generic import NameObject, createStringObject
+import PyPDF2
+
+from pdfautonup import errors
+import pdfautonup
+
+LOGGER = logging.getLogger(pdfautonup.__name__)
+LOGGER.addHandler(logging.StreamHandler())
+
+def _dist_to_round(x):
+    """Return distance of ``x`` to ``round(x)``."""
+    return abs(x - round(x))
+
+
+class _DestinationFile:
+
+    def __init__(self, target_size, metadata=None, interactive=False):
+        self.target_size = target_size
+        self.interactive = interactive
+
+        self.pdf = PyPDF2.PdfFileWriter()
+        self.current_pagenum = 0
+        self.current_page = None
+
+        if metadata:
+            self._set_metadata(metadata)
+
+    def add_page(self, page):
+        """Add ``page`` to the destination file.
+
+        It is added at the right place, and a new blank page is created if
+        necessary.
+        """
+        if self.current_pagenum == 0:
+            self.current_page = self.pdf.addBlankPage(
+                width=self.target_size[0],
+                height=self.target_size[1],
+                )
+        (x, y) = self.cell_center(self.current_pagenum)
+        self.current_page.mergeTranslatedPage(
+            page,
+            x,
+            y,
+            )
+        self.current_pagenum = (self.current_pagenum + 1) % self.pages_per_page
+
+    def write(self, filename):
+        """Write destination file."""
+        if self.interactive and os.path.exists(filename):
+            question = "File {} already exists. Overwrite (y/[n])? ".format(
+                filename
+                )
+            if input(question).lower() != "y":
+                raise errors.UserCancel()
+        self.pdf.write(open(filename, 'w+b'))
+
+    def _set_metadata(self, metadata):
+        """Set metadata on current pdf."""
+        #Source:
+        #    http://two.pairlist.net/pipermail/reportlab-users/2009-November/009033.html
+        try:
+            # pylint: disable=protected-access, no-member
+            # Since we are accessing to a protected membre, which can no longer exist
+            # in a future version of PyPDF2, we prevent errors.
+            infodict = self.pdf._info.getObject()
+            infodict.update(metadata)
+            infodict.update({
+                NameObject('/Producer'): createStringObject(
+                    'PdfAutoNup, using the PyPDF2 library — '
+                    'http://git.framasoft.org/spalax/pdfautonup'
+                    )
+            })
+        except AttributeError:
+            LOGGER.warning("Could not copy metadata from source document.")
+
+    def cell_center(self, num):
+        """Return the center of ``num``th cell of page."""
+        raise NotImplementedError()
+
+    @property
+    def pages_per_page(self):
+        """Return the number of source pages per destination page."""
+        raise NotImplementedError()
+
+
+class FuzzyFit(_DestinationFile):
+    """Documents can overlap, and space can be wasted, but not too much."""
+
+    #: A target size, associated with the number of source pages that will fit
+    #: in it, per width and height (``cell_number[0]`` and ``cell_number[1]``).
+    Fit = namedtuple('Fit', ['cell_number', 'target_size'])
+
+    def __init__(self, source_size, target_size, metadata=None, interactive=False):
+        self.source_size = source_size
+        self.cell_number, target_size = min(
+            self.fit(source_size, target_size),
+            self.fit(source_size, (target_size[1], target_size[0])),
+            key=self.ugliness,
+            )
+        super().__init__(target_size, metadata, interactive)
+
+
+    def ugliness(self, fit):
+        """Return the "ugliness" of this ``fit``.
+
+        - A layout that fits perfectly has an ugliness of 0.
+        - The maximum ugliness is 1.
+        """
+        target_width, target_height = fit.target_size
+        source_width, source_height = self.source_size
+        return (
+            _dist_to_round(target_width / source_width)**2
+            +
+            _dist_to_round(target_height / source_height)**2
+            )
+
+    def fit(self, source_size, target_size):
+        """Return a :class:`self.Fit` object for arguments.
+
+        The main function is computing the number of source pages per
+        destination pages.
+        """
+        cell_number = (
+            max(1, round(target_size[0] / source_size[0])),
+            max(1, round(target_size[1] / source_size[1])),
+            )
+        return self.Fit(cell_number, target_size)
+
+    def cell_center(self, num):
+        """Return the center of ``num``th cell of page."""
+        width, height = self.cell_number
+        return (
+            self.target_size[0] * (num % width) / width,
+            self.target_size[1] * (height - 1 - num // width) / height,
+            )
+
+    @property
+    def pages_per_page(self):
+        """Return the number of source pages per destination page."""
+        return self.cell_number[0] * self.cell_number[1]
+
+
+class MinMargin_FixedGap(_DestinationFile):
+    """Minimum margin is defined, as well as fixed gap."""
+
+    def __init__(self, source_size, target_size, min_gap, min_margin, metadata=None, interactive=False):
+        super().__init__(target_size, metadata, interactive)
+        raise NotImplementedError()

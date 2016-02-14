@@ -154,7 +154,7 @@ def commandline_parser():
         help=textwrap.dedent("""\
             Minimum margin size.
             """),
-        default=[papersize.parse_length("0pt")],
+        default=[None],
         nargs=1,
         type=length_type,
         action='store',
@@ -162,11 +162,10 @@ def commandline_parser():
 
     parser.add_argument(
         '--gap', '-g',
-        dest='min_gap',
         help=textwrap.dedent("""\
-            Minimum gap size.
+            Gap size.
             """),
-        default=[papersize.parse_length("0pt")],
+        default=[None],
         type=length_type,
         nargs=1,
         action='store',
