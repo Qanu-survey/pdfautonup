@@ -56,7 +56,7 @@ class _DestinationFile:
                 width=self.target_size[0],
                 height=self.target_size[1],
                 )
-        (x, y) = self.cell_center(self.current_pagenum)
+        (x, y) = self.cell_topleft(self.current_pagenum)
         self.current_page.mergeTranslatedPage(
             page,
             x,
@@ -93,8 +93,8 @@ class _DestinationFile:
         except AttributeError:
             LOGGER.warning("Could not copy metadata from source document.")
 
-    def cell_center(self, num):
-        """Return the center of ``num``th cell of page."""
+    def cell_topleft(self, num):
+        """Return the top left coordinate of ``num``th cell of page."""
         raise NotImplementedError()
 
     @property
@@ -146,8 +146,7 @@ class FuzzyFit(_DestinationFile):
             )
         return self.Fit(cell_number, target_size)
 
-    def cell_center(self, num):
-        """Return the center of ``num``th cell of page."""
+    def cell_topleft(self, num):
         width, height = self.cell_number
         return (
             self.target_size[0] * (num % width) / width,
@@ -156,13 +155,56 @@ class FuzzyFit(_DestinationFile):
 
     @property
     def pages_per_page(self):
-        """Return the number of source pages per destination page."""
         return self.cell_number[0] * self.cell_number[1]
 
 
-class MinMargin_FixedGap(_DestinationFile):
+class MinMarginFixedGap(_DestinationFile):
     """Minimum margin is defined, as well as fixed gap."""
 
-    def __init__(self, source_size, target_size, min_gap, min_margin, metadata=None, interactive=False):
+    #: Define how the source page will fit into the destination page.
+    #: - `margin` is the destination margin (including wasted space);
+    #: - `sourcex` is the 'extended' source size (source size, together with gap).
+    Fit = namedtuple('Fit', ['margin', 'sourcex'])
+
+    def __init__(self, source_size, target_size, gap, min_margin, metadata=None, interactive=False):
+        # pylint: disable=too-many-arguments
+        self.gap = gap
+        self.min_margin = min_margin
+        self.cell_number = (
+            self._num_fit(target_size[0], source_size[0]),
+            self._num_fit(target_size[1], source_size[1]),
+            )
+
+        wasted = (
+            self._wasted(target_size[0], self.cell_number[0], source_size[0]),
+            self._wasted(target_size[1], self.cell_number[1], source_size[1]),
+            )
+        self.fit = (
+            self.Fit(
+                self.min_margin + wasted[0],
+                source_size[0] + self.gap,
+                ),
+            self.Fit(
+                self.min_margin + wasted[1],
+                source_size[1] + self.gap,
+                ),
+            )
+
         super().__init__(target_size, metadata, interactive)
-        raise NotImplementedError()
+
+    def _wasted(self, dest, num, source):
+        return (dest - num * (source + self.gap) - 2 * self.min_margin + self.gap) / 2
+
+    def _num_fit(self, target, source):
+        return int((target - 2 * self.min_margin + self.gap) // (source + self.gap))
+
+    @property
+    def pages_per_page(self):
+        return self.cell_number[0] * self.cell_number[1]
+
+    def cell_topleft(self, num):
+        width, height = self.cell_number
+        return (
+            self.fit[0].margin + self.fit[0].sourcex * (num % width),
+            self.fit[1].margin + self.fit[1].sourcex * (height - 1 - num // width),
+            )

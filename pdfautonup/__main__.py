@@ -114,8 +114,6 @@ def nup(arguments):
     gap = arguments.gap[0]
     min_margin = arguments.min_margin[0]
 
-    print(target_size, gap, min_margin)
-
     if gap is None and min_margin is None:
         dest = destination.FuzzyFit(
             source_size,
@@ -128,7 +126,7 @@ def nup(arguments):
             gap = decimal.Decimal(0)
         if min_margin is None:
             min_margin = decimal.Decimal(0)
-        dest = destination.MinMargin_FixedGap(
+        dest = destination.MinMarginFixedGap(
             source_size,
             target_size,
             gap,

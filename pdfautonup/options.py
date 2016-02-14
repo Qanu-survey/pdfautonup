@@ -73,6 +73,16 @@ def commandline_parser():
             """),
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=textwrap.dedent("""
+            # Algorithm
+
+            ## Fuzzy fit
+
+            By default, the algorithm tries to fit as many source pages as possible into the destination page, as long as there is not too much overlapping and not too much wasted space.
+
+            ## Minimum margin, fixed gap
+
+            If `--gap=GAP` or `--margin=MARGIN` is set (or both), the algorithm tries to fit as many source pgaes as possible into the destination page, as long as the destination page margin is at least MARGIN, and the gaps are exactly GAP.
+
             # Paper size
 
             ## Source
