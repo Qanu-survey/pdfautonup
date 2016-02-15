@@ -12,14 +12,14 @@ the following difference:
 
 - ``pdfnup`` is focused on layout: "I want my pdf to appear 'n-upped' on a
   '2x3' layout".
-- ``pdfautonup`` is focused on destination paper size: "I want to fit pages on
-  a pdf of a given page size".
+- ``pdfautonup`` is focused on destination paper size: "I want to fit as many
+  pages on a pdf of a given page size".
 
 Rationale
 ---------
 
 As a teacher, I often write A5 (or some weirder format) documents, to be
-printed on a4 paper, copied and given to my students. I was tired of:
+printed on A4 paper, copied and given to my students. I was tired of:
 
 - having to explicitely specify the arguments to ``pdfnup`` (since it can be
   guessed given the source file format);
