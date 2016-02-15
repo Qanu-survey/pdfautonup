@@ -16,7 +16,10 @@
 
 """Main function for the command."""
 
-from math import gcd
+try:
+    from math import gcd
+except ImportError:
+    from fractions import gcd
 import decimal
 import logging
 import os
