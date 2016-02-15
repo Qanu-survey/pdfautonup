@@ -115,9 +115,9 @@ def nup(arguments):
     source_size = (max(page_sizes[0]), max(page_sizes[1]))
     target_size = paper.target_papersize(arguments.target_size)
     gap = arguments.gap[0]
-    min_margin = arguments.min_margin[0]
+    margin = arguments.margin[0]
 
-    if gap is None and min_margin is None:
+    if gap is None and margin is None:
         dest = destination.FuzzyFit(
             source_size,
             target_size,
@@ -127,13 +127,13 @@ def nup(arguments):
     else:
         if gap is None:
             gap = decimal.Decimal(0)
-        if min_margin is None:
-            min_margin = decimal.Decimal(0)
-        dest = destination.MinMarginFixedGap(
+        if margin is None:
+            margin = decimal.Decimal(0)
+        dest = destination.Panelize(
             source_size,
             target_size,
             gap,
-            min_margin,
+            margin,
             interactive=arguments.interactive,
             metadata=_aggregate_metadata(input_files),
             )

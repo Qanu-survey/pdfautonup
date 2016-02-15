@@ -160,9 +160,9 @@ def commandline_parser():
 
     parser.add_argument(
         '--margin', '-m',
-        dest='min_margin',
+        dest='margin',
         help=textwrap.dedent("""\
-            Minimum margin size.
+            Margin size.
             """),
         default=[None],
         nargs=1,

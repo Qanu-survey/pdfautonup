@@ -158,7 +158,7 @@ class FuzzyFit(_DestinationFile):
         return self.cell_number[0] * self.cell_number[1]
 
 
-class MinMarginFixedGap(_DestinationFile):
+class Panelize(_DestinationFile):
     """Minimum margin is defined, as well as fixed gap."""
 
     #: Define how the source page will fit into the destination page.
