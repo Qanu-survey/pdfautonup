@@ -20,7 +20,6 @@ try:
     from math import gcd
 except ImportError:
     from fractions import gcd
-import decimal
 import logging
 import os
 import sys
@@ -36,7 +35,7 @@ LOGGER.addHandler(logging.StreamHandler())
 
 def lcm(a, b):
     """Return least common divisor of arguments"""
-    # pylint: disable=invalid-name
+    # pylint: disable=invalid-name, deprecated-method
     return a * b / gcd(a, b)
 
 class PageIterator:
@@ -114,29 +113,23 @@ def nup(arguments):
     page_sizes = list(zip(*[rectangle_size(page.mediaBox) for page in pages]))
     source_size = (max(page_sizes[0]), max(page_sizes[1]))
     target_size = paper.target_papersize(arguments.target_size)
-    gap = arguments.gap[0]
-    margin = arguments.margin[0]
 
-    if gap is None and margin is None:
-        dest = destination.FuzzyFit(
-            source_size,
-            target_size,
-            interactive=arguments.interactive,
-            metadata=_aggregate_metadata(input_files),
-            )
+    if arguments.algorithm is None:
+        if arguments.gap[0] is None and arguments.margin[0] is None:
+            fit = destination.FuzzyFit
+        else:
+            fit = destination.Panelize
     else:
-        if gap is None:
-            gap = decimal.Decimal(0)
-        if margin is None:
-            margin = decimal.Decimal(0)
-        dest = destination.Panelize(
-            source_size,
-            target_size,
-            gap,
-            margin,
-            interactive=arguments.interactive,
-            metadata=_aggregate_metadata(input_files),
-            )
+        fit = {
+            'fuzzy': destination.FuzzyFit,
+            'panel': destination.Panelize,
+            }[arguments.algorithm]
+    dest = fit(
+        source_size,
+        target_size,
+        arguments=arguments,
+        metadata=_aggregate_metadata(input_files),
+        )
 
     if arguments.repeat == 'auto':
         if len(pages) == 1:

@@ -20,6 +20,7 @@ import os
 
 from PyPDF2.generic import NameObject, createStringObject
 import PyPDF2
+import papersize
 
 from pdfautonup import errors
 import pdfautonup
@@ -34,15 +35,15 @@ def _dist_to_round(x):
 
 class _DestinationFile:
 
-    def __init__(self, target_size, metadata=None, interactive=False):
+    def __init__(self, target_size, arguments, metadata=None):
         self.target_size = target_size
-        self.interactive = interactive
+        self.interactive = arguments.interactive
 
         self.pdf = PyPDF2.PdfFileWriter()
         self.current_pagenum = 0
         self.current_page = None
 
-        if metadata:
+        if metadata is not None:
             self._set_metadata(metadata)
 
     def add_page(self, page):
@@ -110,14 +111,14 @@ class FuzzyFit(_DestinationFile):
     #: in it, per width and height (``cell_number[0]`` and ``cell_number[1]``).
     Fit = namedtuple('Fit', ['cell_number', 'target_size'])
 
-    def __init__(self, source_size, target_size, metadata=None, interactive=False):
+    def __init__(self, source_size, target_size, arguments, metadata=None):
         self.source_size = source_size
         self.cell_number, target_size = min(
             self.fit(source_size, target_size),
             self.fit(source_size, (target_size[1], target_size[0])),
             key=self.ugliness,
             )
-        super().__init__(target_size, metadata, interactive)
+        super().__init__(target_size, arguments, metadata)
 
 
     def ugliness(self, fit):
@@ -166,10 +167,16 @@ class Panelize(_DestinationFile):
     #: - `sourcex` is the 'extended' source size (source size, together with gap).
     Fit = namedtuple('Fit', ['margin', 'sourcex'])
 
-    def __init__(self, source_size, target_size, gap, min_margin, metadata=None, interactive=False):
+    def __init__(self, source_size, target_size, arguments, metadata=None):
         # pylint: disable=too-many-arguments
-        self.gap = gap
-        self.min_margin = min_margin
+        if arguments.gap[0] is None:
+            self.gap = papersize.parse_length("0")
+        else:
+            self.gap = arguments.gap[0]
+        if arguments.margin[0] is None:
+            self.margin = papersize.parse_length("0")
+        else:
+            self.margin = arguments.margin[0]
         self.cell_number = (
             self._num_fit(target_size[0], source_size[0]),
             self._num_fit(target_size[1], source_size[1]),
@@ -181,22 +188,22 @@ class Panelize(_DestinationFile):
             )
         self.fit = (
             self.Fit(
-                self.min_margin + wasted[0],
+                self.margin + wasted[0],
                 source_size[0] + self.gap,
                 ),
             self.Fit(
-                self.min_margin + wasted[1],
+                self.margin + wasted[1],
                 source_size[1] + self.gap,
                 ),
             )
 
-        super().__init__(target_size, metadata, interactive)
+        super().__init__(target_size, arguments, metadata)
 
     def _wasted(self, dest, num, source):
-        return (dest - num * (source + self.gap) - 2 * self.min_margin + self.gap) / 2
+        return (dest - num * (source + self.gap) - 2 * self.margin + self.gap) / 2
 
     def _num_fit(self, target, source):
-        return int((target - 2 * self.min_margin + self.gap) // (source + self.gap))
+        return int((target - 2 * self.margin + self.gap) // (source + self.gap))
 
     @property
     def pages_per_page(self):

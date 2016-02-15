@@ -73,16 +73,6 @@ def commandline_parser():
             """),
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=textwrap.dedent("""
-            # Algorithm
-
-            ## Fuzzy fit
-
-            By default, the algorithm tries to fit as many source pages as possible into the destination page, as long as there is not too much overlapping and not too much wasted space.
-
-            ## Minimum margin, fixed gap
-
-            If `--gap=GAP` or `--margin=MARGIN` is set (or both), the algorithm tries to fit as many source pgaes as possible into the destination page, as long as the destination page margin is at least MARGIN, and the gaps are exactly GAP.
-
             # Paper size
 
             ## Source
@@ -146,6 +136,17 @@ def commandline_parser():
         help='Ask before overwriting destination file if it exists.',
         default=False,
         action='store_true',
+        )
+
+    parser.add_argument(
+        '--algorithm', '-a',
+        help=textwrap.dedent("""\
+            Algorithm used to arrange source documents into destination documents. This program tries to put as many copies of the source document into the destination document, given that:
+            - `fuzzy`: documents can overlap, or leave blank spaces between them, but not too much;
+            - `panel`: the gap length between documents is fixed, and a minimum destination margin is respected.
+            """),
+        default=None,
+        choices=['fuzzy', 'panel'],
         )
 
     parser.add_argument(
