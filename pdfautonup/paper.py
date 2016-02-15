@@ -47,7 +47,7 @@ def target_papersize(target_size):
 
     # Option set by user on command line
     if target_size is not None:
-        return papersize.parse_papersize(target_size[0])
+        return target_size[0]
 
     # LC_PAPER environment variable (can be read from "locale -k LC_PAPER"
     try:

@@ -23,6 +23,26 @@ import papersize
 
 from pdfautonup import VERSION
 
+def length_type(text):
+    """Check type of length (number plus optional unit).
+
+    Wrapper to :func:`papersize.parse_length`.
+    """
+    try:
+        return papersize.parse_length(text)
+    except papersize.CouldNotParse as error:
+        raise argparse.ArgumentTypeError(str(error))
+
+def size_type(text):
+    """Check type of paper size (couple of numbers plus optional units).
+
+    Wrapper to :func:`papersize.parse_papersize`.
+    """
+    try:
+        return papersize.parse_papersize(text)
+    except papersize.CouldNotParse as error:
+        raise argparse.ArgumentTypeError(str(error))
+
 def repeat_type(text):
     """Check type of '--repeat' option.
 
@@ -53,6 +73,16 @@ def commandline_parser():
             """),
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=textwrap.dedent("""
+            # Algorithm
+
+            ## Fuzzy fit
+
+            By default, the algorithm tries to fit as many source pages as possible into the destination page, as long as there is not too much overlapping and not too much wasted space.
+
+            ## Minimum margin, fixed gap
+
+            If `--gap=GAP` or `--margin=MARGIN` is set (or both), the algorithm tries to fit as many source pgaes as possible into the destination page, as long as the destination page margin is at least MARGIN, and the gaps are exactly GAP.
+
             # Paper size
 
             ## Source
@@ -123,6 +153,30 @@ def commandline_parser():
         dest='target_size',
         help='Target paper size (see below for accepted sizes).',
         default=None,
+        nargs=1,
+        action='store',
+        type=size_type,
+        )
+
+    parser.add_argument(
+        '--margin', '-m',
+        dest='margin',
+        help=textwrap.dedent("""\
+            Margin size.
+            """),
+        default=[None],
+        nargs=1,
+        type=length_type,
+        action='store',
+        )
+
+    parser.add_argument(
+        '--gap', '-g',
+        help=textwrap.dedent("""\
+            Gap size.
+            """),
+        default=[None],
+        type=length_type,
         nargs=1,
         action='store',
         )
