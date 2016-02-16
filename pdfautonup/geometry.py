@@ -29,7 +29,7 @@ def _dist_to_round(x):
     return abs(x - round(x))
 
 
-class _FitMethod:
+class _Layout:
 
     def __init__(self, target_size, arguments, metadata=None):
         self.target_size = target_size
@@ -100,32 +100,32 @@ class _FitMethod:
         raise NotImplementedError()
 
 
-class FuzzyFit(_FitMethod):
+class Fuzzy(_Layout):
     """Documents can overlap, and space can be wasted, but not too much."""
 
     #: A target size, associated with the number of source pages that will fit
     #: in it, per width and height (``cell_number[0]`` and ``cell_number[1]``).
-    Fit = namedtuple('Fit', ['cell_number', 'target_size'])
+    Grid = namedtuple('Grid', ['cell_number', 'target_size'])
 
     def __init__(self, source_size, target_size, arguments, metadata=None):
         if arguments.margin[0] is not None or arguments.gap[0] is not None:
             LOGGER.warning("Arguments `--margin` and `--gap` are ignored with algorithm `fuzzy`.")
         self.source_size = source_size
         self.cell_number, target_size = min(
-            self.fit(source_size, target_size),
-            self.fit(source_size, (target_size[1], target_size[0])),
+            self.grid(source_size, target_size),
+            self.grid(source_size, (target_size[1], target_size[0])),
             key=self.ugliness,
             )
         super().__init__(target_size, arguments, metadata)
 
 
-    def ugliness(self, fit):
-        """Return the "ugliness" of this ``fit``.
+    def ugliness(self, grid):
+        """Return the "ugliness" of this ``grid``.
 
         - A layout that fits perfectly has an ugliness of 0.
         - The maximum ugliness is 1.
         """
-        target_width, target_height = fit.target_size
+        target_width, target_height = grid.target_size
         source_width, source_height = self.source_size
         return (
             _dist_to_round(target_width / source_width)**2
@@ -133,8 +133,8 @@ class FuzzyFit(_FitMethod):
             _dist_to_round(target_height / source_height)**2
             )
 
-    def fit(self, source_size, target_size):
-        """Return a :class:`self.Fit` object for arguments.
+    def grid(self, source_size, target_size):
+        """Return a :class:`self.Grid` object for arguments.
 
         The main function is computing the number of source pages per
         destination pages.
@@ -143,7 +143,7 @@ class FuzzyFit(_FitMethod):
             max(1, round(target_size[0] / source_size[0])),
             max(1, round(target_size[1] / source_size[1])),
             )
-        return self.Fit(cell_number, target_size)
+        return self.Grid(cell_number, target_size)
 
     def cell_topleft(self, num):
         width, height = self.cell_number
@@ -157,13 +157,13 @@ class FuzzyFit(_FitMethod):
         return self.cell_number[0] * self.cell_number[1]
 
 
-class Panelize(_FitMethod):
+class Panelize(_Layout):
     """Minimum margin is defined, as well as fixed gap."""
 
     #: Define how the source page will fit into the destination page.
     #: - `margin` is the destination margin (including wasted space);
     #: - `sourcex` is the 'extended' source size (source size, together with gap).
-    Fit = namedtuple('Fit', ['margin', 'sourcex'])
+    Grid = namedtuple('Grid', ['margin', 'sourcex'])
 
     def __init__(self, source_size, target_size, arguments, metadata=None):
         # pylint: disable=too-many-arguments
@@ -184,12 +184,12 @@ class Panelize(_FitMethod):
             self._wasted(target_size[0], self.cell_number[0], source_size[0]),
             self._wasted(target_size[1], self.cell_number[1], source_size[1]),
             )
-        self.fit = (
-            self.Fit(
+        self.grid = (
+            self.Grid(
                 self.margin + wasted[0],
                 source_size[0] + self.gap,
                 ),
-            self.Fit(
+            self.Grid(
                 self.margin + wasted[1],
                 source_size[1] + self.gap,
                 ),
@@ -210,6 +210,6 @@ class Panelize(_FitMethod):
     def cell_topleft(self, num):
         width, height = self.cell_number
         return (
-            self.fit[0].margin + self.fit[0].sourcex * (num % width),
-            self.fit[1].margin + self.fit[1].sourcex * (height - 1 - num // width),
+            self.grid[0].margin + self.grid[0].sourcex * (num % width),
+            self.grid[1].margin + self.grid[1].sourcex * (height - 1 - num // width),
             )

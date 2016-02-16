@@ -27,7 +27,7 @@ from PyPDF2.generic import NameObject, createStringObject
 import PyPDF2
 
 from pdfautonup import LOGGER
-from pdfautonup import errors, options, paper, fitmethod
+from pdfautonup import errors, options, paper, geometry
 
 def lcm(a, b):
     """Return least common divisor of arguments"""
@@ -112,13 +112,13 @@ def nup(arguments):
 
     if arguments.algorithm is None:
         if arguments.gap[0] is None and arguments.margin[0] is None:
-            fit = fitmethod.FuzzyFit
+            fit = geometry.Fuzzy
         else:
-            fit = fitmethod.Panelize
+            fit = geometry.Panelize
     else:
         fit = {
-            'fuzzy': fitmethod.FuzzyFit,
-            'panel': fitmethod.Panelize,
+            'fuzzy': geometry.Fuzzy,
+            'panel': geometry.Panelize,
             }[arguments.algorithm]
 
     dest = fit(
