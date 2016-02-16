@@ -15,18 +15,14 @@
 """Different algorithm to fit source files into destination files."""
 
 from collections import namedtuple
-import logging
 import os
 
 from PyPDF2.generic import NameObject, createStringObject
 import PyPDF2
 import papersize
 
+from pdfautonup import LOGGER
 from pdfautonup import errors
-import pdfautonup
-
-LOGGER = logging.getLogger(pdfautonup.__name__)
-LOGGER.addHandler(logging.StreamHandler())
 
 def _dist_to_round(x):
     """Return distance of ``x`` to ``round(x)``."""

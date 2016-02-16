@@ -20,18 +20,14 @@ try:
     from math import gcd
 except ImportError:
     from fractions import gcd
-import logging
 import os
 import sys
 
 from PyPDF2.generic import NameObject, createStringObject
 import PyPDF2
 
+from pdfautonup import LOGGER
 from pdfautonup import errors, options, paper, fitmethod
-import pdfautonup
-
-LOGGER = logging.getLogger(pdfautonup.__name__)
-LOGGER.addHandler(logging.StreamHandler())
 
 def lcm(a, b):
     """Return least common divisor of arguments"""

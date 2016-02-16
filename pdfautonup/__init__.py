@@ -14,7 +14,11 @@
 
 """Convert PDF files to 'n-up' PDF files, guessing the output layout."""
 
+import logging
+
 VERSION = "0.2.0"
 __AUTHOR__ = "Louis Paternault (spalax@gresille.org)"
 __COPYRIGHT__ = "(C) 2014-2016 Louis Paternault. GNU GPL 3 or later."
 
+LOGGER = logging.getLogger(__name__)
+LOGGER.addHandler(logging.StreamHandler())
