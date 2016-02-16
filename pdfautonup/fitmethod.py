@@ -33,7 +33,7 @@ def _dist_to_round(x):
     return abs(x - round(x))
 
 
-class _DestinationFile:
+class _FitMethod:
 
     def __init__(self, target_size, arguments, metadata=None):
         self.target_size = target_size
@@ -104,7 +104,7 @@ class _DestinationFile:
         raise NotImplementedError()
 
 
-class FuzzyFit(_DestinationFile):
+class FuzzyFit(_FitMethod):
     """Documents can overlap, and space can be wasted, but not too much."""
 
     #: A target size, associated with the number of source pages that will fit
@@ -159,7 +159,7 @@ class FuzzyFit(_DestinationFile):
         return self.cell_number[0] * self.cell_number[1]
 
 
-class Panelize(_DestinationFile):
+class Panelize(_FitMethod):
     """Minimum margin is defined, as well as fixed gap."""
 
     #: Define how the source page will fit into the destination page.

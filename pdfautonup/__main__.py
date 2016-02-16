@@ -27,7 +27,7 @@ import sys
 from PyPDF2.generic import NameObject, createStringObject
 import PyPDF2
 
-from pdfautonup import errors, options, paper, destination
+from pdfautonup import errors, options, paper, fitmethod
 import pdfautonup
 
 LOGGER = logging.getLogger(pdfautonup.__name__)
@@ -116,13 +116,13 @@ def nup(arguments):
 
     if arguments.algorithm is None:
         if arguments.gap[0] is None and arguments.margin[0] is None:
-            fit = destination.FuzzyFit
+            fit = fitmethod.FuzzyFit
         else:
-            fit = destination.Panelize
+            fit = fitmethod.Panelize
     else:
         fit = {
-            'fuzzy': destination.FuzzyFit,
-            'panel': destination.Panelize,
+            'fuzzy': fitmethod.FuzzyFit,
+            'panel': fitmethod.Panelize,
             }[arguments.algorithm]
     dest = fit(
         source_size,
