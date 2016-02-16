@@ -108,6 +108,8 @@ class FuzzyFit(_FitMethod):
     Fit = namedtuple('Fit', ['cell_number', 'target_size'])
 
     def __init__(self, source_size, target_size, arguments, metadata=None):
+        if arguments.margin[0] is not None or arguments.gap[0] is not None:
+            LOGGER.warning("Arguments `--margin` and `--gap` are ignored with algorithm `fuzzy`.")
         self.source_size = source_size
         self.cell_number, target_size = min(
             self.fit(source_size, target_size),
