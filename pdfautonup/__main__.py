@@ -120,6 +120,7 @@ def nup(arguments):
             'fuzzy': fitmethod.FuzzyFit,
             'panel': fitmethod.Panelize,
             }[arguments.algorithm]
+
     dest = fit(
         source_size,
         target_size,
