@@ -15,6 +15,7 @@
 """Different algorithm to fit source files into destination files."""
 
 from collections import namedtuple
+import operator
 import os
 
 from PyPDF2.generic import NameObject, createStringObject
@@ -112,8 +113,8 @@ class Fuzzy(_Layout):
             LOGGER.warning("Arguments `--margin` and `--gap` are ignored with algorithm `fuzzy`.")
         self.source_size = source_size
         self.cell_number, target_size = min(
-            self.grid(source_size, target_size),
-            self.grid(source_size, (target_size[1], target_size[0])),
+            self._grid(source_size, target_size),
+            self._grid(source_size, (target_size[1], target_size[0])),
             key=self.ugliness,
             )
         super().__init__(target_size, arguments, metadata)
@@ -133,7 +134,7 @@ class Fuzzy(_Layout):
             _dist_to_round(target_height / source_height)**2
             )
 
-    def grid(self, source_size, target_size):
+    def _grid(self, source_size, target_size):
         """Return a :class:`self.Grid` object for arguments.
 
         The main function is computing the number of source pages per
@@ -163,7 +164,7 @@ class Panelize(_Layout):
     #: Define how the source page will fit into the destination page.
     #: - `margin` is the destination margin (including wasted space);
     #: - `sourcex` is the 'extended' source size (source size, together with gap).
-    Grid = namedtuple('Grid', ['margin', 'sourcex'])
+    Grid = namedtuple('Grid', ['margin', 'sourcex', 'dimension', 'target', 'pagenumber'])
 
     def __init__(self, source_size, target_size, arguments, metadata=None):
         # pylint: disable=too-many-arguments
@@ -175,41 +176,55 @@ class Panelize(_Layout):
             self.margin = papersize.parse_length("0")
         else:
             self.margin = arguments.margin[0]
-        self.cell_number = (
-            self._num_fit(target_size[0], source_size[0]),
-            self._num_fit(target_size[1], source_size[1]),
+
+        self.grid = max(
+            self._grid(source_size, target_size),
+            self._grid(source_size, (target_size[1], target_size[0])),
+            key=operator.attrgetter('pagenumber'),
+            )
+
+        super().__init__(self.grid.target, arguments, metadata)
+
+    def _grid(self, source, target):
+        dimension = (
+            self._num_fit(target[0], source[0]),
+            self._num_fit(target[1], source[1]),
             )
 
         wasted = (
-            self._wasted(target_size[0], self.cell_number[0], source_size[0]),
-            self._wasted(target_size[1], self.cell_number[1], source_size[1]),
+            self._wasted(target[0], dimension[0], source[0]),
+            self._wasted(target[1], dimension[1], source[1]),
             )
-        self.grid = (
-            self.Grid(
-                self.margin + wasted[0],
-                source_size[0] + self.gap,
-                ),
-            self.Grid(
-                self.margin + wasted[1],
-                source_size[1] + self.gap,
-                ),
+        return self.Grid(
+            margin=(self.margin + wasted[0], self.margin + wasted[1]),
+            sourcex=(source[0] + self.gap, source[1] + self.gap),
+            dimension=dimension,
+            target=target,
+            pagenumber=dimension[0]*dimension[1],
             )
-
-        super().__init__(target_size, arguments, metadata)
 
     def _wasted(self, dest, num, source):
+        """Return the amount of wasted space
+
+        When fitting `num` elements of size `source` into element of size
+        `dest` (in one dimension).
+        """
         return (dest - num * (source + self.gap) - 2 * self.margin + self.gap) / 2
 
     def _num_fit(self, target, source):
+        """Return the number of source elements that can fit in target.
+
+        Both `source` and `target` are sizes, in one dimension.
+        """
         return int((target - 2 * self.margin + self.gap) // (source + self.gap))
 
     @property
     def pages_per_page(self):
-        return self.cell_number[0] * self.cell_number[1]
+        return self.grid.dimension[0] * self.grid.dimension[1]
 
     def cell_topleft(self, num):
-        width, height = self.cell_number
+        width, height = self.grid.dimension
         return (
-            self.grid[0].margin + self.grid[0].sourcex * (num % width),
-            self.grid[1].margin + self.grid[1].sourcex * (height - 1 - num // width),
+            self.grid.margin[0] + self.grid.sourcex[0] * (num % width),
+            self.grid.margin[1] + self.grid.sourcex[1] * (height - 1 - num // width),
             )
