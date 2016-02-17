@@ -112,11 +112,22 @@ class Fuzzy(_Layout):
         if arguments.margin[0] is not None or arguments.gap[0] is not None:
             LOGGER.warning("Arguments `--margin` and `--gap` are ignored with algorithm `fuzzy`.")
         self.source_size = source_size
-        self.cell_number, target_size = min(
-            self._grid(source_size, target_size),
-            self._grid(source_size, (target_size[1], target_size[0])),
-            key=self.ugliness,
-            )
+        if arguments.orientation == "landscape":
+            self.cell_number, target_size = self._grid(
+                source_size,
+                papersize.rotate(target_size, papersize.LANDSCAPE),
+                )
+        elif arguments.orientation == "portrait":
+            self.cell_number, target_size = self._grid(
+                source_size,
+                papersize.rotate(target_size, papersize.PORTRAIT),
+                )
+        else:
+            self.cell_number, target_size = min(
+                self._grid(source_size, target_size),
+                self._grid(source_size, (target_size[1], target_size[0])),
+                key=self.ugliness,
+                )
         super().__init__(target_size, arguments, metadata)
 
 
@@ -177,11 +188,16 @@ class Panelize(_Layout):
         else:
             self.margin = arguments.margin[0]
 
-        self.grid = max(
-            self._grid(source_size, target_size),
-            self._grid(source_size, (target_size[1], target_size[0])),
-            key=operator.attrgetter('pagenumber'),
-            )
+        if arguments.orientation == "landscape":
+            self.grid = self._grid(source_size, papersize.rotate(target_size, papersize.LANDSCAPE))
+        elif arguments.orientation == "portrait":
+            self.grid = self._grid(source_size, papersize.rotate(target_size, papersize.PORTRAIT))
+        else:
+            self.grid = max(
+                self._grid(source_size, target_size),
+                self._grid(source_size, (target_size[1], target_size[0])),
+                key=operator.attrgetter('pagenumber'),
+                )
 
         super().__init__(self.grid.target, arguments, metadata)
 

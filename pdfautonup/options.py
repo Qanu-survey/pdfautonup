@@ -148,6 +148,15 @@ def commandline_parser():
         )
 
     parser.add_argument(
+        '--orientation', '-O',
+        help=textwrap.dedent("""\
+            Destination paper orientation. Default is 'auto', which choose the paper orientation to fit the maximum number of source pages on the destination page.
+            """),
+        default='auto',
+        choices=['auto', 'portrait', 'landscape'],
+        )
+
+    parser.add_argument(
         '--size', '-s',
         dest='target_size',
         help='Target paper size (see below for accepted sizes).',
