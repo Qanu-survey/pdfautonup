@@ -11,9 +11,9 @@ Examples
 
 With the default paper size being A4, ``pdfautonup`` on:
 
-- `trigo.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/trigo.pdf>`_ gives `trigo-nup.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/trigo-nup.pdf>`_
-- `pcb.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/pcb.pdf>`_ gives `pcb-nup.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/pcb-nup.pdf>`_
-- `three-pages.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/three-pages.pdf>`_ gives `three-pages-nup.pdf <http://git.framasoft.org/spalax/pdfautonup/blob/master/examples/three-pages-nup.pdf>`_
+- `trigo.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/trigo.pdf>`_ gives `trigo-nup.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/trigo-nup.pdf>`_
+- `pcb.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/pcb.pdf>`_ gives `pcb-nup.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/pcb-nup.pdf>`_
+- `three-pages.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/three-pages.pdf>`_ gives `three-pages-nup.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/three-pages-nup.pdf>`_
 
 See the documentation for the full command lines used to generate those examples.
 
