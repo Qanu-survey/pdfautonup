@@ -15,6 +15,7 @@
 """Different algorithm to fit source files into destination files."""
 
 from collections import namedtuple
+import decimal
 import operator
 import os
 
@@ -106,32 +107,30 @@ class Fuzzy(_Layout):
 
     #: A target size, associated with the number of source pages that will fit
     #: in it, per width and height (``cell_number[0]`` and ``cell_number[1]``).
-    Grid = namedtuple('Grid', ['cell_number', 'target_size'])
+    Grid = namedtuple('Grid', ['cell_number', 'target_size', 'margins', 'gaps'])
 
     def __init__(self, source_size, target_size, arguments, metadata=None):
         if arguments.margin[0] is not None or arguments.gap[0] is not None:
             LOGGER.warning("Arguments `--margin` and `--gap` are ignored with algorithm `fuzzy`.")
         self.source_size = source_size
         if arguments.orientation == "landscape":
-            self.cell_number, target_size = self._grid(
+            self.grid = self._grid(
                 source_size,
                 papersize.rotate(target_size, papersize.LANDSCAPE),
                 )
         elif arguments.orientation == "portrait":
-            self.cell_number, target_size = self._grid(
+            self.grid = self._grid(
                 source_size,
                 papersize.rotate(target_size, papersize.PORTRAIT),
                 )
         else:
-            self.cell_number, target_size = min(
+            self.grid = min(
                 self._grid(source_size, target_size),
                 self._grid(source_size, (target_size[1], target_size[0])),
                 key=self.ugliness,
                 )
 
-        super().__init__(target_size, arguments, metadata)
-
-        self.margins = self._margins()
+        super().__init__(self.grid.target_size, arguments, metadata)
 
 
     def ugliness(self, grid):
@@ -148,16 +147,29 @@ class Fuzzy(_Layout):
             _dist_to_round(target_height / source_height)**2
             )
 
-    def _margins(self):
-        if self.cell_number[0] == 1:
-            width = (self.target_size[0] - self.source_size[0] * self.cell_number[0]) / 2
+    @staticmethod
+    def _margins(target_size, source_size, cell_number):
+        if cell_number[0] == 1:
+            width = (target_size[0] - source_size[0] * cell_number[0]) / 2
         else:
             width = 0
-        if self.cell_number[1] == 1:
-            height = (self.target_size[1] - self.source_size[1] * self.cell_number[1]) / 2
+        if cell_number[1] == 1:
+            height = (target_size[1] - source_size[1] * cell_number[1]) / 2
         else:
             height = 0
         return [width, height]
+
+    @staticmethod
+    def _gaps(target_size, source_size, cell_number):
+        if cell_number[0] == 1:
+            width = decimal.Decimal(0)
+        else:
+            width = (target_size[0] - cell_number[0] * source_size[0]) / (cell_number[0] - 1)
+        if cell_number[1] == 1:
+            height = decimal.Decimal(0)
+        else:
+            height = (target_size[1] - cell_number[1] * source_size[1]) / (cell_number[1] - 1)
+        return (width, height)
 
     def _grid(self, source_size, target_size):
         """Return a :class:`self.Grid` object for arguments.
@@ -169,18 +181,24 @@ class Fuzzy(_Layout):
             max(1, round(target_size[0] / source_size[0])),
             max(1, round(target_size[1] / source_size[1])),
             )
-        return self.Grid(cell_number, target_size)
+        return self.Grid(
+            cell_number,
+            target_size,
+            self._margins(target_size, source_size, cell_number),
+            self._gaps(target_size, source_size, cell_number),
+            )
 
     def cell_topleft(self, num):
-        width, height = self.cell_number
+        # pylint: disable=line-too-long
+        width, height = self.grid.cell_number
         return (
-            self.margins[0] + self.target_size[0] * (num % width) / width,
-            self.margins[1] + self.target_size[1] * (height - 1 - num // width) / height,
+            self.grid.margins[0] + (self.source_size[0] + self.grid.gaps[0]) * (num % width),
+            self.grid.margins[1] + (self.source_size[1] + self.grid.gaps[1]) * (height - 1 - num // width),
             )
 
     @property
     def pages_per_page(self):
-        return self.cell_number[0] * self.cell_number[1]
+        return self.grid.cell_number[0] * self.grid.cell_number[1]
 
 
 class Panelize(_Layout):
