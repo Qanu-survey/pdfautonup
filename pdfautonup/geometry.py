@@ -128,7 +128,10 @@ class Fuzzy(_Layout):
                 self._grid(source_size, (target_size[1], target_size[0])),
                 key=self.ugliness,
                 )
+
         super().__init__(target_size, arguments, metadata)
+
+        self.margins = self._margins()
 
 
     def ugliness(self, grid):
@@ -145,6 +148,17 @@ class Fuzzy(_Layout):
             _dist_to_round(target_height / source_height)**2
             )
 
+    def _margins(self):
+        if self.cell_number[0] == 1:
+            width = (self.target_size[0] - self.source_size[0] * self.cell_number[0]) / 2
+        else:
+            width = 0
+        if self.cell_number[1] == 1:
+            height = (self.target_size[1] - self.source_size[1] * self.cell_number[1]) / 2
+        else:
+            height = 0
+        return [width, height]
+
     def _grid(self, source_size, target_size):
         """Return a :class:`self.Grid` object for arguments.
 
@@ -160,8 +174,8 @@ class Fuzzy(_Layout):
     def cell_topleft(self, num):
         width, height = self.cell_number
         return (
-            self.target_size[0] * (num % width) / width,
-            self.target_size[1] * (height - 1 - num // width) / height,
+            self.margins[0] + self.target_size[0] * (num % width) / width,
+            self.margins[1] + self.target_size[1] * (height - 1 - num // width) / height,
             )
 
     @property
