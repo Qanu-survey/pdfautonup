@@ -1,3 +1,13 @@
+* pdfautonup 0.3.0 (2016-02-18)
+
+    * New algorithm to arrange source documents onto destination document (from a request to panelize printed circuit boards).
+    * Adding other algorithms will be easier now.
+    * Add option `--orientation`, to force destination page orientation.
+    * Fix centering and margin problems with the `fuzzy` (old) algorithm.
+    * Minor documentation improvements
+
+    -- Louis Paternault <spalax@gresille.org>
+
 * pdfautonup 0.2.0 (2016-01-25)
 
     * Can be called as a python module : `python3 -m pdfautonup FOO` is equivalent to `pdfautonup FOO`.
