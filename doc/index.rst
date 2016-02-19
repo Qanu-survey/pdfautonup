@@ -45,7 +45,7 @@ Examples
 With the default paper size being A4:
 
 - command ``pdfautonup trigo.pdf`` turns :download:`trigo.pdf <../examples/trigo.pdf>` into :download:`trigo-nup.pdf <../examples/trigo-nup.pdf>`
-- command ``pdfautonup --algorithm panel --gap .5cm --margin 1cm pcb.pdf`` turns :download:`pcb.pdf <../examples/pcb.pdf>` into :download:`pcb-nup.pdf <../examples/pcb-nup.pdf>` (courtesy of Vesa Solonen).
+- command ``pdfautonup --algorithm panel --gap .5cm --margin 1cm pcb.pdf`` turns :download:`pcb.pdf <../examples/pcb.pdf>` into :download:`pcb-nup.pdf <../examples/pcb-nup.pdf>`.
 - command ``pdfautonup three-pages.pdf`` turns :download:`three-pages.pdf <../examples/three-pages.pdf>` into :download:`three-pages-nup.pdf <../examples/three-pages-nup.pdf>`.
 
 Download and install
