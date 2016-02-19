@@ -35,7 +35,7 @@ def lcm(a, b):
     return a * b / gcd(a, b)
 
 class PageIterator:
-    """Iterotor over pages of several pdf documents."""
+    """Iterator over pages of several pdf documents."""
     # pylint: disable=too-few-public-methods
 
     def __init__(self, files):
