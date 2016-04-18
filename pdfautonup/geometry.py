@@ -233,7 +233,7 @@ class Panelize(_Layout):
 
         if self.pages_per_page == 0:
             raise errors.GeometryError(
-                "Format constrtaints too tight: Cannot fit any source page into destination page."
+                "Format constraints too tight: Cannot fit any source page into destination page."
             )
 
         super().__init__(self.grid.target, arguments, metadata)
