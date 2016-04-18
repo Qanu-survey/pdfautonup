@@ -1,3 +1,9 @@
+* pdfautonup 0.4.0 (unreleased)
+
+    * Raise error instead of producing a PDF with no pages (closes #7).
+
+    -- Louis Paternault <spalax@gresille.org>
+
 * pdfautonup 0.3.0 (2016-02-18)
 
     * New algorithm to arrange source documents onto destination document (from a request to panelize printed circuit boards).
