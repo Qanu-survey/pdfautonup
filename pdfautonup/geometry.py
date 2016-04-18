@@ -231,6 +231,11 @@ class Panelize(_Layout):
                 key=operator.attrgetter('pagenumber'),
                 )
 
+        if self.pages_per_page == 0:
+            raise errors.GeometryError(
+                "Format constrtaints too tight: Cannot fit any source page into destination page."
+            )
+
         super().__init__(self.grid.target, arguments, metadata)
 
     def _grid(self, source, target):

@@ -44,3 +44,13 @@ class InputFileError(PdfAutoNupError):
 
     def __str__(self):
         return "Error while reading file '{}': {}".format(self.filename, str(self.error))
+
+class GeometryError(PdfAutoNupError):
+    """Error about page or file geometry."""
+
+    def __init__(self, string):
+        super().__init__()
+        self.string = string
+
+    def __str__(self):
+        return "[Geometry error] " + self.string
