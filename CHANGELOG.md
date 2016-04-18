@@ -1,6 +1,7 @@
 * pdfautonup 0.4.0 (unreleased)
 
     * Raise error instead of producing a PDF with no pages (closes #7).
+    * Add option `--progress` (closes #8).
 
     -- Louis Paternault <spalax@gresille.org>
 

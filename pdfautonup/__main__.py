@@ -34,6 +34,29 @@ def lcm(a, b):
     # pylint: disable=invalid-name, deprecated-method
     return a * b / gcd(a, b)
 
+def _none_function(*args, **kwargs):
+    """Accept any number of arguments. and does nothing."""
+    # pylint: disable=unused-argument
+    pass
+
+def _progress_printer(string):
+    """Returns a function that prints the progress message."""
+
+    def print_progress(page, total):
+        """Print progress message."""
+        try:
+            text = string.format(
+                page=page,
+                total=total,
+                percent=int(page*100/total),
+                )
+        except: # pylint: disable=bare-except
+            text = string
+        print(text, end="")
+        sys.stdout.flush()
+
+    return print_progress
+
 class PageIterator:
     """Iterator over pages of several pdf documents."""
     # pylint: disable=too-few-public-methods
@@ -95,7 +118,7 @@ def add_extension(filename):
             return extended
     return filename
 
-def nup(arguments):
+def nup(arguments, progress=_none_function):
     """Build destination file."""
     input_files = list()
     for pdf in arguments.files:
@@ -137,8 +160,14 @@ def nup(arguments):
         repeat = arguments.repeat
     elif arguments.repeat == 'fit':
         repeat = lcm(dest.pages_per_page, len(pages)) // len(pages)
+
+    pagecount = 0
+    pagetotal = int(repeat * len(pages))
+    progress(pagecount, pagetotal)
     for page in pages.repeat_iterator(repeat):
         dest.add_page(page)
+        pagecount += 1
+        progress(pagecount, pagetotal)
 
     dest.write(options.destination_name(arguments.output, add_extension(arguments.files[0])))
 
@@ -147,7 +176,9 @@ def main():
     arguments = options.commandline_parser().parse_args(sys.argv[1:])
 
     try:
-        nup(arguments)
+        nup(arguments, progress=_progress_printer(arguments.progress))
+        if not (arguments.progress.endswith("\n") or arguments.progress == ""):
+            print()
     except KeyboardInterrupt:
         print()
         sys.exit(1)

@@ -57,6 +57,16 @@ def repeat_type(text):
         raise argparse.ArgumentTypeError(textwrap.dedent("""
         Argument must be either 'fit' or 'auto', or a positive integer.
         """))
+
+def progress_type(text):
+    """Return plain progress text, turning aliases into their value."""
+    return {
+        'dot': '.',
+        'percent': '{percent}%\n',
+        'pages': '{page}/{total}\n',
+        'none': '',
+        }.get(text, text)
+
 def commandline_parser():
     """Return a command line parser."""
 
@@ -202,6 +212,20 @@ def commandline_parser():
         type=repeat_type,
         default='auto',
         action='store',
+        )
+
+    parser.add_argument(
+        '--progress', '-p',
+        help=textwrap.dedent(r"""
+        Text to print after processing each page. Strings "{page}", "{pagetotal}", "{percent}" are replaced by their respective values. The following alias are defined:
+        - 'none': no progress;
+        - 'dot': '.';
+        - 'pages': '{page}/{total}\n';
+        - 'percent': '{percent}%%\n'.
+        """),
+        type=progress_type,
+        default="",
+        action="store",
         )
 
     return parser
