@@ -10,9 +10,9 @@ Examples
 
 With the default paper size being A4, ``pdfautonup`` on:
 
-- `trigo.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/trigo.pdf>`_ gives `trigo-nup.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/trigo-nup.pdf>`_
-- `pcb.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/pcb.pdf>`_ gives `pcb-nup.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/pcb-nup.pdf>`_
-- `three-pages.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/three-pages.pdf>`_ gives `three-pages-nup.pdf <https://pdfautonup.readthedocs.org/en/latest/_downloads/three-pages-nup.pdf>`_
+- `trigo.pdf <https://pdfautonup.readthedocs.io/en/latest/_downloads/trigo.pdf>`_ gives `trigo-nup.pdf <https://pdfautonup.readthedocs.io/en/latest/_downloads/trigo-nup.pdf>`_
+- `pcb.pdf <https://pdfautonup.readthedocs.io/en/latest/_downloads/pcb.pdf>`_ gives `pcb-nup.pdf <https://pdfautonup.readthedocs.io/en/latest/_downloads/pcb-nup.pdf>`_
+- `three-pages.pdf <https://pdfautonup.readthedocs.io/en/latest/_downloads/three-pages.pdf>`_ gives `three-pages-nup.pdf <https://pdfautonup.readthedocs.io/en/latest/_downloads/three-pages-nup.pdf>`_
 
 See the documentation for the full command lines used to generate those examples.
 
@@ -49,15 +49,15 @@ Documentation
 -------------
 
 * The compiled documentation is available on `readthedocs
-  <http://pdfautonup.readthedocs.org>`_
+  <http://pdfautonup.readthedocs.io>`_
 
 * To compile it from source, download and run::
 
       cd doc && make html
 
 
-.. |documentation| image:: http://readthedocs.org/projects/pdfautonup/badge
-  :target: http://pdfautonup.readthedocs.org
+.. |documentation| image:: http://readthedocs.io/projects/pdfautonup/badge
+  :target: http://pdfautonup.readthedocs.io
 .. |pypi| image:: https://img.shields.io/pypi/v/pdfautonup.svg
   :target: http://pypi.python.org/pypi/pdfautonup
 .. |license| image:: https://img.shields.io/pypi/l/pdfautonup.svg
