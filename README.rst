@@ -56,7 +56,7 @@ Documentation
       cd doc && make html
 
 
-.. |documentation| image:: http://readthedocs.io/projects/pdfautonup/badge
+.. |documentation| image:: http://readthedocs.org/projects/pdfautonup/badge
   :target: http://pdfautonup.readthedocs.io
 .. |pypi| image:: https://img.shields.io/pypi/v/pdfautonup.svg
   :target: http://pypi.python.org/pypi/pdfautonup
