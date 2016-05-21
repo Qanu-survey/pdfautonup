@@ -1,4 +1,10 @@
-* pdfautonup 0.4.0 (unreleased)
+* pdfautonup 0.4.1 (2016-05-21)
+
+    * Fix error in changelog.
+
+    -- Louis Paternault <spalax@gresille.org>
+
+* pdfautonup 0.4.0 (2016-05-21)
 
     * Raise error instead of producing a PDF with no pages (closes #7).
     * Add option `--progress` (closes #8).
