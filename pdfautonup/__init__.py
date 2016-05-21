@@ -16,7 +16,7 @@
 
 import logging
 
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 __AUTHOR__ = "Louis Paternault (spalax@gresille.org)"
 __COPYRIGHT__ = "(C) 2014-2016 Louis Paternault. GNU GPL 3 or later."
 
