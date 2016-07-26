@@ -1,3 +1,9 @@
+* pdfautonup 0.5.0 (unreleased)
+
+    * Move help about paper sizes into a separate "--help-paper" option.
+
+    -- Louis Paternault <spalax@gresille.org>
+
 * pdfautonup 0.4.1 (2016-05-21)
 
     * Fix error in changelog.
