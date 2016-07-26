@@ -262,4 +262,3 @@ def destination_name(output, source):
     if output is None:
         return "{}-nup.pdf".format(".".join(source.split('.')[:-1]))
     return output
-
