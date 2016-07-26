@@ -15,6 +15,7 @@
 """Manage options"""
 
 import argparse
+import sys
 import textwrap
 
 import papersize
@@ -67,6 +68,51 @@ def progress_type(text):
         'none': '',
         }.get(text, text)
 
+class HelpPaper(argparse.Action):
+    """Argparse action to display help about paper sizes."""
+    #: pylint: disable=too-few-public-methods
+
+    def __init__(self, *args, **kwargs):
+        if 'nargs' in kwargs:
+            raise ValueError("nargs not allowed")
+        kwargs['nargs'] = 0
+        super().__init__(*args, **kwargs)
+
+    def __call__(self, *args, **kwargs):
+        print(
+            textwrap.dedent("""
+            # Source
+
+            Paper size is read from the following sources (in that order):
+
+            - Argument of "--size" option;
+            - LC_PAPER environment variable (read as mm);
+            - PAPERSIZE environment variable;
+            - content of file specified by the PAPERCONF environment variable;
+            - content of file /etc/papersize;
+            - output of the paperconf command;
+            - if everything else have failed, A4.
+
+            # Recognized sizes
+
+            Using the "--size" option, paper size can be either specified by the explicit dimensions, or by the name of the size.
+
+            - Explicit dimensions are of the form WIDTHxHEIGHT, where WIDTH and HEIGHT are floating point numbers in one of the following units (default being pt): {units};
+            - Recognized paper size names are: {papersizenames}.
+
+            For instance, A4 paper can be set using "--size=A4" or "--size=21cmx29.7cm".
+            """).format(
+                units=str(", ".join([
+                    size
+                    for size
+                    in sorted(papersize.UNITS.keys())
+                    if size
+                    ])),
+                papersizenames=str(", ".join(sorted(papersize.SIZES.keys()))),
+            ).strip()
+        )
+        sys.exit(0)
+
 def commandline_parser():
     """Return a command line parser."""
 
@@ -80,36 +126,6 @@ def commandline_parser():
             repeated to fill all destination pages.
             """),
         formatter_class=argparse.RawTextHelpFormatter,
-        epilog=textwrap.dedent("""
-            # Paper size
-
-            ## Source
-
-            Paper size is get from the following sources (in that order):
-
-            - Argument of "--size" option;
-            - LC_PAPER environment variable (read as mm);
-            - PAPERSIZE environment variable;
-            - content of file specified by the PAPERCONF environment variable;
-            - content of file /etc/papersize;
-            - output of the paperconf command;
-            - if everything else have failed, A4.
-
-            ## Recognized sizes
-
-            Paper size can be either specified by the explicit dimensions, or by the name of the size.
-
-            - Explicit dimensions are of the form WIDTHxHEIGHT, where WIDTH and HEIGHT are floating point numbers in one of the following units (default being pt): {units};
-            - Recognized paper size names are: {papersizenames}.
-            """).format(
-                units=str(", ".join([
-                    size
-                    for size
-                    in sorted(papersize.UNITS.keys())
-                    if size
-                    ])),
-                papersizenames=str(", ".join(sorted(papersize.SIZES.keys()))),
-                ),
         )
 
     parser.add_argument(
@@ -117,6 +133,12 @@ def commandline_parser():
         help='Show version',
         action='version',
         version='%(prog)s ' + VERSION
+        )
+
+    parser.add_argument(
+        '--help-paper',
+        help='Show an help message about paper sizes, and exit.',
+        action=HelpPaper,
         )
 
     parser.add_argument(
