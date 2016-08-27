@@ -1,7 +1,7 @@
 pdfautonup — n-up the pages of pdf files, guessing layout
 =========================================================
 
-|sources| |pypi| |build| |documentation| |license|
+|sources| |pypi| |build| |coverage| |documentation| |license|
 
 Fit as much pages as possible, from some PDF files to a 'n-up' PDF file of a given page size, guessing the layout.
 
@@ -64,6 +64,8 @@ Documentation
   :target: http://www.gnu.org/licenses/gpl-3.0.html
 .. |sources| image:: https://img.shields.io/badge/sources-pdfautonup-brightgreen.svg
   :target: http://git.framasoft.org/spalax/pdfautonup
+.. |coverage| image:: https://git.framasoft.org/spalax/pdfautonup/badges/master/coverage.svg
+  :target: https://git.framasoft.org/spalax/pdfautonup/builds
 .. |build| image:: https://git.framasoft.org/spalax/pdfautonup/badges/master/build.svg
   :target: https://git.framasoft.org/spalax/pdfautonup/builds
 
