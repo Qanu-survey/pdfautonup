@@ -1,4 +1,4 @@
-* pdfautonup 0.4.2 (unreleased)
+* pdfautonup 0.4.2 (2016-10-14)
 
     * Move help about paper sizes into a separate "--help-paper" option.
 
