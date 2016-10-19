@@ -19,8 +19,7 @@ See the documentation for the full command lines used to generate those examples
 What's new?
 -----------
 
-See `changelog
-<https://git.framasoft.org/spalax/pdfautonup/blob/master/CHANGELOG.md>`_.
+See `changelog <https://git.framasoft.org/spalax/pdfautonup/blob/master/CHANGELOG.md>`_.
 
 Download and install
 --------------------
@@ -48,8 +47,7 @@ See the end of list for a (quick and dirty) Debian package.
 Documentation
 -------------
 
-* The compiled documentation is available on `readthedocs
-  <http://pdfautonup.readthedocs.io>`_
+* The compiled documentation is available on `readthedocs <http://pdfautonup.readthedocs.io>`_
 
 * To compile it from source, download and run::
 
