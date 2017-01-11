@@ -1,3 +1,9 @@
+* pdfautonup 0.4.3 (unreleased)
+
+    * Add python3.6 support.
+
+    -- Louis Paternault <spalax@gresille.org>
+
 * pdfautonup 0.4.2 (2016-10-14)
 
     * Move help about paper sizes into a separate "--help-paper" option.
