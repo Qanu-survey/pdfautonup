@@ -1,6 +1,7 @@
 * pdfautonup 0.4.3 (unreleased)
 
     * Add python3.6 support.
+    * Fix bug #10: Crash if PDF files have no pages.
 
     -- Louis Paternault <spalax@gresille.org>
 

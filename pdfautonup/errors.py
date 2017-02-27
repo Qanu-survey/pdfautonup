@@ -16,7 +16,13 @@
 
 class PdfAutoNupError(Exception):
     """Generic error for pdfautonup"""
-    pass
+
+    def __init__(self, string=""):
+        super().__init__()
+        self.string = string
+
+    def __str__(self):
+        return "Error: {}".format(self.string)
 
 class UserCancel(PdfAutoNupError):
     """Action cancelled by user."""
@@ -26,10 +32,6 @@ class UserCancel(PdfAutoNupError):
 
 class CouldNotParse(PdfAutoNupError):
     """Could not parse string as a paper size."""
-
-    def __init__(self, string):
-        super().__init__()
-        self.string = string
 
     def __str__(self):
         return "Could not parse paper size '{}'.".format(self.string)

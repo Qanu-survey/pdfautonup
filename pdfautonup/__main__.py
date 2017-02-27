@@ -120,6 +120,8 @@ def add_extension(filename):
 
 def nup(arguments, progress=_none_function):
     """Build destination file."""
+    # pylint: disable=too-many-branches
+
     input_files = list()
     for pdf in arguments.files:
         try:
@@ -128,6 +130,9 @@ def nup(arguments, progress=_none_function):
             raise errors.InputFileError(pdf, error)
 
     pages = PageIterator(input_files)
+
+    if len(pages) == 0:
+        raise errors.PdfAutoNupError("PDF files have no pages to process.")
 
     page_sizes = list(zip(*[rectangle_size(page.mediaBox) for page in pages]))
     source_size = (max(page_sizes[0]), max(page_sizes[1]))
