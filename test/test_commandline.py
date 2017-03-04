@@ -15,47 +15,65 @@
 
 """Tests"""
 
+import os
+import subprocess
 import sys
 import unittest
 
-from wand.image import Image # TODO Add wand to test/requirements.txt
+from wand.image import Image
+import pkg_resources
+
+TEST_DATA_DIR = pkg_resources.resource_filename(__name__, "test_commandline-data")
 
 FIXTURES = [
     {
-        command: ["pcb.pdf"],
-        returncode: 0,
-        diff: ("pcb-nup.pdf", "pcb-control.pdf")
+        "command": ["--algorithm", "panel", "--gap", ".5cm", "--margin", "1cm", "pcb.pdf"],
+        "returncode": 0,
+        "diff": ("pcb-nup.pdf", "pcb-control.pdf")
     },
     {
-        command: ["trigo.pdf"],
-        returncode: 0,
-        diff: ("trigo-nup.pdf", "trigo-control.pdf")
+        "command": ["trigo.pdf"],
+        "returncode": 0,
+        "diff": ("trigo-nup.pdf", "trigo-control.pdf")
     },
     {
-        command: ["three-pages.pdf"],
-        returncode: 0,
-        diff: ("three-pages-nup.pdf", "three-pages-control.pdf")
+        "command": ["three-pages.pdf"],
+        "returncode": 0,
+        "diff": ("three-pages-nup.pdf", "three-pages-control.pdf")
     },
     # TODO Add/Change tests to test failure and command line arguments
 ]
 
 class TestCommandLine(unittest.TestCase):
+    """Run binary, and check produced files."""
 
     def assertPdfEqual(self, filea, fileb):
-        imgages = (
+        """Test whether PDF files given in argument (as file names) are equal.
+
+        Equal means: they look the same.
+        """
+        # pylint: disable=invalid-name
+        images = (
             Image(filename=filea),
             Image(filename=fileb),
             )
         # TODO Check page number
         for (pagea, pageb) in zip(images[0].sequence, images[1].sequence):
-            pagea.compare(pageb, metric="absolute") # TODO Check return value
+            self.assertEqual(
+                pagea.compare(pageb, metric="absolute")[1],
+                0,
+                )
 
     def test_commandline(self):
+        """Test binary, from command line to produced files."""
         for data in FIXTURES:
             with self.subTest(**data):
-                completed = subprocess.run(
+                completed = subprocess.run( # TODO: This does not work with python3.4
                     [sys.executable, "-m", "pdfautonup"] + data['command'],
-                    cwd=TODO, # TODO Use pkg_resources.resource_filename()
+                    cwd=TEST_DATA_DIR,
                     )
                 self.assertEqual(completed.returncode, data['returncode'])
-                self.assertPdfEqual(*data['diff'])
+                self.assertPdfEqual(*(
+                    os.path.join(TEST_DATA_DIR, filename)
+                    for filename in data['diff']
+                    ))
