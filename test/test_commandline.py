@@ -44,7 +44,16 @@ FIXTURES = [
         "returncode": 0,
         "diff": ("three-pages-nup.pdf", "three-pages-control.pdf")
     },
-    # TODO Add/Change tests to test failure and command line arguments
+    {
+        "command": ["malformed.pdf"],
+        "returncode": 1,
+        "stderr": "Error while reading file 'malformed.pdf': Could not read malformed PDF file\n",
+    },
+    {
+        "command": ["zero-pages.pdf"],
+        "returncode": 1,
+        "stderr": "Error: PDF files have no pages to process.\n",
+    },
 ]
 
 class TestCommandLine(unittest.TestCase):
@@ -80,10 +89,21 @@ class TestCommandLine(unittest.TestCase):
             with self.subTest(**data):
                 completed = subprocess.run(
                     [sys.executable, "-m", "pdfautonup"] + data['command'],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
                     cwd=TEST_DATA_DIR,
+                    universal_newlines=True,
                     )
-                self.assertEqual(completed.returncode, data['returncode'])
-                self.assertPdfEqual(*(
-                    os.path.join(TEST_DATA_DIR, filename)
-                    for filename in data['diff']
-                    ))
+
+                for key in ["returncode", "stderr", "stdout"]:
+                    if key in data:
+                        self.assertEqual(
+                            getattr(completed, key),
+                            data.get(key),
+                            )
+
+                if "diff" in data:
+                    self.assertPdfEqual(*(
+                        os.path.join(TEST_DATA_DIR, filename)
+                        for filename in data['diff']
+                        ))
