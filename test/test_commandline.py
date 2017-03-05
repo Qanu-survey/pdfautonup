@@ -23,6 +23,9 @@ import unittest
 from wand.image import Image
 import pkg_resources
 
+if sys.version_info < (3, 5):
+    raise RuntimeError("Tests require python version 3.5 or higher.")
+
 TEST_DATA_DIR = pkg_resources.resource_filename(__name__, "test_commandline-data")
 
 FIXTURES = [
@@ -68,7 +71,7 @@ class TestCommandLine(unittest.TestCase):
         """Test binary, from command line to produced files."""
         for data in FIXTURES:
             with self.subTest(**data):
-                completed = subprocess.run( # TODO: This does not work with python3.4
+                completed = subprocess.run(
                     [sys.executable, "-m", "pdfautonup"] + data['command'],
                     cwd=TEST_DATA_DIR,
                     )
