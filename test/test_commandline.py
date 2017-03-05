@@ -60,7 +60,14 @@ class TestCommandLine(unittest.TestCase):
             Image(filename=filea),
             Image(filename=fileb),
             )
-        # TODO Check page number
+
+        # Check that files have the same number of pages
+        self.assertEqual(
+            len(images[0].sequence),
+            len(images[1].sequence),
+            )
+
+        # Check if pages look the same
         for (pagea, pageb) in zip(images[0].sequence, images[1].sequence):
             self.assertEqual(
                 pagea.compare(pageb, metric="absolute")[1],
