@@ -20,7 +20,7 @@ import subprocess
 import sys
 import unittest
 
-from wand.image import Image
+from wand.image import Image # pylint: disable=import-error
 import pkg_resources
 
 if sys.version_info < (3, 5):
