@@ -26,31 +26,41 @@ import pkg_resources
 if sys.version_info < (3, 5):
     raise RuntimeError("Tests require python version 3.5 or higher.")
 
+if 'COVERAGE' in os.environ:
+    EXECUTABLE = ["coverage", "run"]
+else:
+    EXECUTABLE = [sys.executable]
+
 TEST_DATA_DIR = pkg_resources.resource_filename(__name__, "test_commandline-data")
 
 FIXTURES = [
     {
-        "command": ["--algorithm", "panel", "--gap", ".5cm", "--margin", "1cm", "pcb.pdf"],
+        "command": [
+            "--algorithm", "panel", "--gap", ".5cm", "--margin", "1cm",
+            os.path.join(TEST_DATA_DIR, "pcb.pdf"),
+            ],
         "returncode": 0,
         "diff": ("pcb-nup.pdf", "pcb-control.pdf")
     },
     {
-        "command": ["trigo.pdf"],
+        "command": [os.path.join(TEST_DATA_DIR, "trigo.pdf")],
         "returncode": 0,
         "diff": ("trigo-nup.pdf", "trigo-control.pdf")
     },
     {
-        "command": ["three-pages.pdf"],
+        "command": [os.path.join(TEST_DATA_DIR, "three-pages.pdf")],
         "returncode": 0,
         "diff": ("three-pages-nup.pdf", "three-pages-control.pdf")
     },
     {
-        "command": ["malformed.pdf"],
+        "command": [os.path.join(TEST_DATA_DIR, "malformed.pdf")],
         "returncode": 1,
-        "stderr": "Error while reading file 'malformed.pdf': Could not read malformed PDF file\n",
+        "stderr": "Error while reading file '{}': Could not read malformed PDF file\n".format(
+            os.path.join(TEST_DATA_DIR, "malformed.pdf")
+            ),
     },
     {
-        "command": ["zero-pages.pdf"],
+        "command": [os.path.join(TEST_DATA_DIR, "zero-pages.pdf")],
         "returncode": 1,
         "stderr": "Error: PDF files have no pages to process.\n",
     },
@@ -88,10 +98,9 @@ class TestCommandLine(unittest.TestCase):
         for data in FIXTURES:
             with self.subTest(**data):
                 completed = subprocess.run(
-                    [sys.executable, "-m", "pdfautonup"] + data['command'],
+                    EXECUTABLE + ["-m", "pdfautonup"] + data['command'],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
-                    cwd=TEST_DATA_DIR,
                     universal_newlines=True,
                     )
 
