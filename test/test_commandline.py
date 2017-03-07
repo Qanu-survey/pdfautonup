@@ -26,7 +26,7 @@ import pkg_resources
 if sys.version_info < (3, 5):
     raise RuntimeError("Tests require python version 3.5 or higher.")
 
-if 'COVERAGE' in os.environ:
+if 'COVERAGE_PROCESS_START' in os.environ:
     EXECUTABLE = ["coverage", "run"]
 else:
     EXECUTABLE = [sys.executable]
