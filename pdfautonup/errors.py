@@ -17,42 +17,15 @@
 class PdfAutoNupError(Exception):
     """Generic error for pdfautonup"""
 
-    def __init__(self, string=""):
+    def __init__(self, message=""):
         super().__init__()
-        self.string = string
+        self.message = message
 
     def __str__(self):
-        return "Error: {}".format(self.string)
-
-class UserCancel(PdfAutoNupError):
-    """Action cancelled by user."""
-
-    def __str__(self):
-        return ""
+        return self.message
 
 class CouldNotParse(PdfAutoNupError):
     """Could not parse string as a paper size."""
 
     def __str__(self):
-        return "Could not parse paper size '{}'.".format(self.string)
-
-class InputFileError(PdfAutoNupError):
-    """Error while reading input file."""
-
-    def __init__(self, filename, error):
-        super().__init__()
-        self.filename = filename
-        self.error = error
-
-    def __str__(self):
-        return "Error while reading file '{}': {}".format(self.filename, str(self.error))
-
-class GeometryError(PdfAutoNupError):
-    """Error about page or file geometry."""
-
-    def __init__(self, string):
-        super().__init__()
-        self.string = string
-
-    def __str__(self):
-        return "[Geometry error] " + self.string
+        return "Could not parse paper size '{}'.".format(self.message)

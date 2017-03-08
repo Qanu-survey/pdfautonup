@@ -70,7 +70,7 @@ class _Layout:
                 filename
                 )
             if input(question).lower() != "y":
-                raise errors.UserCancel()
+                raise errors.PdfAutoNupError("Cancelled by user.")
         self.pdf.write(open(filename, 'w+b'))
 
     def _set_metadata(self, metadata):
@@ -232,8 +232,9 @@ class Panelize(_Layout):
                 )
 
         if self.pages_per_page == 0:
-            raise errors.GeometryError(
-                "Format constraints too tight: Cannot fit any source page into destination page."
+            raise errors.PdfAutoNupError(
+                "Error: Format constraints too tight: Cannot fit any"
+                "source page into destination page."
             )
 
         super().__init__(self.grid.target, arguments, metadata)
