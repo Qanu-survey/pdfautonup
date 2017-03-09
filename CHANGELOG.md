@@ -1,7 +1,10 @@
 * pdfautonup 0.4.3 (unreleased)
 
     * Add python3.6 support.
-    * Fix bug #10: Crash if PDF files have no pages.
+    * Add regression tests.
+    * Fix bug #10: No longer crash if PDF files have no pages.
+    * Fix bug #11: No longer crash if PDF pages have null dimensions (e.g. "0cmx1cm").
+    * Minor internal improvements.
 
     -- Louis Paternault <spalax@gresille.org>
 
