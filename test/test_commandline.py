@@ -64,6 +64,11 @@ FIXTURES = [
         "returncode": 1,
         "stderr": "Error: PDF files have no pages to process.\n",
     },
+    {
+        "command": [os.path.join(TEST_DATA_DIR, "dummy.pdf")],
+        "returncode": 1,
+        "stderr": "Error: A PDF page have a null dimension.\n",
+    },
 ]
 
 class TestCommandLine(unittest.TestCase):

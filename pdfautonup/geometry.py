@@ -1,4 +1,4 @@
-# Copyright Louis Paternault 2011-2016
+# Copyright Louis Paternault 2011-2017
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -177,10 +177,13 @@ class Fuzzy(_Layout):
         The main function is computing the number of source pages per
         destination pages.
         """
-        cell_number = (
-            max(1, round(target_size[0] / source_size[0])),
-            max(1, round(target_size[1] / source_size[1])),
-            )
+        try:
+            cell_number = (
+                max(1, round(target_size[0] / source_size[0])),
+                max(1, round(target_size[1] / source_size[1])),
+                )
+        except decimal.DivisionByZero:
+            raise errors.PdfAutoNupError("Error: A PDF page have a null dimension.")
         return self.Grid(
             cell_number,
             target_size,
