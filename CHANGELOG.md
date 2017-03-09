@@ -2,8 +2,8 @@
 
     * Add python3.6 support.
     * Add regression tests.
-    * Fix bug #10: No longer crash if PDF files have no pages.
-    * Fix bug #11: No longer crash if PDF pages have null dimensions (e.g. "0cmx1cm").
+    * No longer crash if PDF files have no pages (closes #10).
+    * No longer crash if PDF pages have null dimensions, for instance "0cmx1cm" (closes #11).
     * Minor internal improvements.
 
     -- Louis Paternault <spalax@gresille.org>
