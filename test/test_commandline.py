@@ -23,8 +23,6 @@ import unittest
 from wand.image import Image
 import pkg_resources
 
-if sys.version_info < (3, 5):
-    raise RuntimeError("Tests require python version 3.5 or higher.")
 
 if 'COVERAGE_PROCESS_START' in os.environ:
     EXECUTABLE = ["coverage", "run"]
@@ -98,6 +96,7 @@ class TestCommandLine(unittest.TestCase):
                 0,
                 )
 
+    @unittest.skipIf(sys.version_info < (3, 5), "Tests require python version 3.5 or higher.")
     def test_commandline(self):
         """Test binary, from command line to produced files."""
         for data in FIXTURES:
