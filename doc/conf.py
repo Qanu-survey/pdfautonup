@@ -67,14 +67,14 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'PdfAutoNup'
-copyright = '2014-2016, Louis Paternault'
+copyright = '2014-2017, Louis Paternault'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = "0.4.2"
+version = "0.4.3"
 # The full version, including alpha/beta/rc tags.
 release = version
 

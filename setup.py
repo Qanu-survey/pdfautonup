@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2014-2016 Louis Paternault
+# Copyright 2014-2017 Louis Paternault
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ def readme():
 
 setup(
     name='PdfAutoNup',
-    version="0.4.2",
+    version="0.4.3",
     packages=find_packages(exclude=["test*"]),
     setup_requires=["hgtools"],
     install_requires=[

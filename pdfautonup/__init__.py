@@ -1,4 +1,4 @@
-# Copyright Louis Paternault 2014-2016
+# Copyright Louis Paternault 2014-2017
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -16,9 +16,9 @@
 
 import logging
 
-VERSION = "0.4.2"
+VERSION = "0.4.3"
 __AUTHOR__ = "Louis Paternault (spalax@gresille.org)"
-__COPYRIGHT__ = "(C) 2014-2016 Louis Paternault. GNU GPL 3 or later."
+__COPYRIGHT__ = "(C) 2014-2017 Louis Paternault. GNU GPL 3 or later."
 
 LOGGER = logging.getLogger(__name__)
 LOGGER.addHandler(logging.StreamHandler())
