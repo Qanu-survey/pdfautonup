@@ -141,6 +141,9 @@ def nup(arguments, progress=_none_function):
     source_size = (max(page_sizes[0]), max(page_sizes[1]))
     target_size = paper.target_papersize(arguments.target_size)
 
+    if [len(set(page_sizes[i])) for i in (0, 1)] != [1, 1]:
+        LOGGER.warning("Pages have different sizes. The result might be unexpected.")
+
     if arguments.algorithm is None:
         if arguments.gap[0] is None and arguments.margin[0] is None:
             fit = geometry.Fuzzy

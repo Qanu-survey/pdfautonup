@@ -1,3 +1,9 @@
+* pdfautonup 0.4.4 (unreleased)
+
+    * Log a warning if pages have different sizes.
+
+    -- Louis Paternault <spalax@gresille.org>
+
 * pdfautonup 0.4.3 (2017-03-11)
 
     * No longer crash if PDF files have no pages (closes #10).
