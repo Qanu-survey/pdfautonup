@@ -46,7 +46,7 @@ setup(
         ],
     include_package_data=True,
     author='Louis Paternault',
-    author_email='spalax+pypi@gresille.org',
+    author_email='spalax+python@gresille.org',
     description="Convert PDF files to 'n-up' PDF files, guessing the output layout.",
     url='https://git.framasoft.org/spalax/pdfautonup',
     license="GPLv3 or any later version",
