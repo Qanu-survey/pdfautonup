@@ -92,7 +92,7 @@ def _aggregate_metadata(files):
             in input_info
             if (key in data and data[key])
             ])
-        if len(values):
+        if values:
             value = ', '.join(['“{}”'.format(item) for item in values])
             if len(values) != len(files):
                 value += ", and maybe others."
@@ -134,7 +134,7 @@ def nup(arguments, progress=_none_function):
 
     pages = PageIterator(input_files)
 
-    if len(pages) == 0:
+    if not pages:
         raise errors.PdfAutoNupError("Error: PDF files have no pages to process.")
 
     page_sizes = list(zip(*[rectangle_size(page.mediaBox) for page in pages]))
@@ -166,7 +166,7 @@ def nup(arguments, progress=_none_function):
         if len(pages) == 1:
             arguments.repeat = 'fit'
         else:
-            arguments.repeat = 1 # pylint: disable=redefined-variable-type
+            arguments.repeat = 1
     if isinstance(arguments.repeat, int):
         repeat = arguments.repeat
     elif arguments.repeat == 'fit':

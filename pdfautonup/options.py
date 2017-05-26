@@ -79,6 +79,7 @@ class HelpPaper(argparse.Action):
         super().__init__(*args, **kwargs)
 
     def __call__(self, *args, **kwargs):
+        # pylint: disable=arguments-differ
         print(
             textwrap.dedent("""
             # Source
