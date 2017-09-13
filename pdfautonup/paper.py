@@ -53,7 +53,7 @@ def target_papersize(target_size):
             ["locale", "-k", "LC_PAPER"],
             universal_newlines=True,
             ))
-    except (subprocess.CalledProcessError, errors.CouldNotParse):
+    except (FileNotFoundError, subprocess.CalledProcessError, errors.CouldNotParse):
         pass
 
     # PAPERSIZE environment variable
