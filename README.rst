@@ -1,5 +1,5 @@
 pdfautonup 🍳 n-up the pages of pdf files, guessing layout
-=========================================================
+==========================================================
 
 |sources| |pypi| |build| |coverage| |documentation| |license|
 
