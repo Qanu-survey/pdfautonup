@@ -127,7 +127,7 @@ def nup(arguments, progress=_none_function):
         try:
             input_files.append(PyPDF2.PdfFileReader(add_extension(pdf)))
         except (FileNotFoundError, PyPDF2.utils.PdfReadError, PermissionError) as error:
-            raise errors.PdfAutoNupError(
+            raise errors.PdfautonupError(
                 "Error while reading file '{}': {}."
                 .format(pdf, error)
                 )
@@ -135,7 +135,7 @@ def nup(arguments, progress=_none_function):
     pages = PageIterator(input_files)
 
     if not pages:
-        raise errors.PdfAutoNupError("Error: PDF files have no pages to process.")
+        raise errors.PdfautonupError("Error: PDF files have no pages to process.")
 
     page_sizes = list(zip(*[rectangle_size(page.mediaBox) for page in pages]))
     source_size = (max(page_sizes[0]), max(page_sizes[1]))
@@ -193,7 +193,7 @@ def main():
     except KeyboardInterrupt:
         print()
         sys.exit(1)
-    except errors.PdfAutoNupError as error:
+    except errors.PdfautonupError as error:
         LOGGER.error(error)
         sys.exit(1)
 

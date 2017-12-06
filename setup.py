@@ -36,7 +36,7 @@ def readme():
         return file.read()
 
 setup(
-    name='PdfAutoNup',
+    name='pdfautonup',
     version="0.4.3",
     packages=find_packages(exclude=["test*"]),
     setup_requires=["hgtools"],

@@ -14,7 +14,7 @@
 
 """Errors and exceptions"""
 
-class PdfAutoNupError(Exception):
+class PdfautonupError(Exception):
     """Generic error for pdfautonup"""
 
     def __init__(self, message=""):
@@ -24,7 +24,7 @@ class PdfAutoNupError(Exception):
     def __str__(self):
         return self.message
 
-class CouldNotParse(PdfAutoNupError):
+class CouldNotParse(PdfautonupError):
     """Could not parse string as a paper size."""
 
     def __str__(self):

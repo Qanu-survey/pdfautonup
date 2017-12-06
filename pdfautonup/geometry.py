@@ -70,7 +70,7 @@ class _Layout:
                 filename
                 )
             if input(question).lower() != "y":
-                raise errors.PdfAutoNupError("Cancelled by user.")
+                raise errors.PdfautonupError("Cancelled by user.")
         self.pdf.write(open(filename, 'w+b'))
 
     def _set_metadata(self, metadata):
@@ -85,7 +85,7 @@ class _Layout:
             infodict.update(metadata)
             infodict.update({
                 NameObject('/Producer'): createStringObject(
-                    'PdfAutoNup, using the PyPDF2 library — '
+                    'pdfautonup, using the PyPDF2 library — '
                     'http://git.framasoft.org/spalax/pdfautonup'
                     )
             })
@@ -183,7 +183,7 @@ class Fuzzy(_Layout):
                 max(1, round(target_size[1] / source_size[1])),
                 )
         except decimal.DivisionByZero:
-            raise errors.PdfAutoNupError("Error: A PDF page have a null dimension.")
+            raise errors.PdfautonupError("Error: A PDF page have a null dimension.")
         return self.Grid(
             cell_number,
             target_size,
@@ -235,7 +235,7 @@ class Panelize(_Layout):
                 )
 
         if self.pages_per_page == 0:
-            raise errors.PdfAutoNupError(
+            raise errors.PdfautonupError(
                 "Error: Format constraints too tight: Cannot fit any"
                 "source page into destination page."
             )

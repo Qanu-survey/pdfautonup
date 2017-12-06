@@ -1,4 +1,4 @@
-Welcome to `PdfAutoNup`'s documentation!
+Welcome to `pdfautonup`'s documentation!
 ========================================
 
 Render PDF files to a 'n-up' PDF file of a given page size, guessing the
