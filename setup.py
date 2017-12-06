@@ -37,7 +37,7 @@ def readme():
 
 setup(
     name='pdfautonup',
-    version="0.4.3",
+    version="1.0.0",
     packages=find_packages(exclude=["test*"]),
     setup_requires=["hgtools"],
     install_requires=[

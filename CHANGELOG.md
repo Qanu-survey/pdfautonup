@@ -1,4 +1,4 @@
-* pdfautonup 0.4.4 (unreleased)
+* pdfautonup 1.0.0 (2017-12-06)
 
     * Log a warning if pages have different sizes.
 
