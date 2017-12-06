@@ -54,6 +54,7 @@ setup(
     entry_points={
         'console_scripts': ['pdfautonup = pdfautonup.__main__:main']
         },
+    keywords = "pdf nup",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
