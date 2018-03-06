@@ -1,3 +1,9 @@
+* pdfautonup 1.1.0 (unreleased)
+
+    * Drop python3.4 support.
+
+    -- Louis Paternault <spalax+python@gresille.org>
+
 * pdfautonup 1.0.0 (2017-12-06)
 
     * Log a warning if pages have different sizes.

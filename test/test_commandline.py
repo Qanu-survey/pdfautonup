@@ -96,10 +96,6 @@ class TestCommandLine(unittest.TestCase):
                 0,
                 )
 
-    # If tests are really needed for python3.4, a kind-of backport of
-    # subprocess.run() is available here:
-    # https://framagit.org/spalax/pdfimpose/blob/bc5f72f91cbae589f126e0509f52a2a6c3eee43c/test/test_commandline.py#L49-68
-    @unittest.skipIf(sys.version_info < (3, 5), "Tests require python version 3.5 or higher.")
     def test_commandline(self):
         """Test binary, from command line to produced files."""
         for data in FIXTURES:
