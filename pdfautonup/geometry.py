@@ -26,13 +26,13 @@ import papersize
 from pdfautonup import LOGGER
 from pdfautonup import errors
 
+
 def _dist_to_round(x):
     """Return distance of ``x`` to ``round(x)``."""
     return abs(x - round(x))
 
 
 class _Layout:
-
     def __init__(self, target_size, arguments, metadata=None):
         self.target_size = target_size
         self.interactive = arguments.interactive
@@ -52,30 +52,23 @@ class _Layout:
         """
         if self.current_pagenum == 0:
             self.current_page = self.pdf.addBlankPage(
-                width=self.target_size[0],
-                height=self.target_size[1],
-                )
-        (x, y) = self.cell_topleft(self.current_pagenum)
-        self.current_page.mergeTranslatedPage(
-            page,
-            x,
-            y,
+                width=self.target_size[0], height=self.target_size[1]
             )
+        (x, y) = self.cell_topleft(self.current_pagenum)
+        self.current_page.mergeTranslatedPage(page, x, y)
         self.current_pagenum = (self.current_pagenum + 1) % self.pages_per_page
 
     def write(self, filename):
         """Write destination file."""
         if self.interactive and os.path.exists(filename):
-            question = "File {} already exists. Overwrite (y/[n])? ".format(
-                filename
-                )
+            question = "File {} already exists. Overwrite (y/[n])? ".format(filename)
             if input(question).lower() != "y":
                 raise errors.PdfautonupError("Cancelled by user.")
-        self.pdf.write(open(filename, 'w+b'))
+        self.pdf.write(open(filename, "w+b"))
 
     def _set_metadata(self, metadata):
         """Set metadata on current pdf."""
-        #Source:
+        # Source:
         #    http://two.pairlist.net/pipermail/reportlab-users/2009-November/009033.html
         try:
             # pylint: disable=protected-access, no-member
@@ -83,12 +76,14 @@ class _Layout:
             # in a future version of PyPDF2, we prevent errors.
             infodict = self.pdf._info.getObject()
             infodict.update(metadata)
-            infodict.update({
-                NameObject('/Producer'): createStringObject(
-                    'pdfautonup, using the PyPDF2 library — '
-                    'http://git.framasoft.org/spalax/pdfautonup'
+            infodict.update(
+                {
+                    NameObject("/Producer"): createStringObject(
+                        "pdfautonup, using the PyPDF2 library — "
+                        "http://git.framasoft.org/spalax/pdfautonup"
                     )
-            })
+                }
+            )
         except AttributeError:
             LOGGER.warning("Could not copy metadata from source document.")
 
@@ -107,31 +102,30 @@ class Fuzzy(_Layout):
 
     #: A target size, associated with the number of source pages that will fit
     #: in it, per width and height (``cell_number[0]`` and ``cell_number[1]``).
-    Grid = namedtuple('Grid', ['cell_number', 'target_size', 'margins', 'gaps'])
+    Grid = namedtuple("Grid", ["cell_number", "target_size", "margins", "gaps"])
 
     def __init__(self, source_size, target_size, arguments, metadata=None):
         if arguments.margin[0] is not None or arguments.gap[0] is not None:
-            LOGGER.warning("Arguments `--margin` and `--gap` are ignored with algorithm `fuzzy`.")
+            LOGGER.warning(
+                "Arguments `--margin` and `--gap` are ignored with algorithm `fuzzy`."
+            )
         self.source_size = source_size
         if arguments.orientation == "landscape":
             self.grid = self._grid(
-                source_size,
-                papersize.rotate(target_size, papersize.LANDSCAPE),
-                )
+                source_size, papersize.rotate(target_size, papersize.LANDSCAPE)
+            )
         elif arguments.orientation == "portrait":
             self.grid = self._grid(
-                source_size,
-                papersize.rotate(target_size, papersize.PORTRAIT),
-                )
+                source_size, papersize.rotate(target_size, papersize.PORTRAIT)
+            )
         else:
             self.grid = min(
                 self._grid(source_size, target_size),
                 self._grid(source_size, (target_size[1], target_size[0])),
                 key=self.ugliness,
-                )
+            )
 
         super().__init__(self.grid.target_size, arguments, metadata)
-
 
     def ugliness(self, grid):
         """Return the "ugliness" of this ``grid``.
@@ -142,10 +136,9 @@ class Fuzzy(_Layout):
         target_width, target_height = grid.target_size
         source_width, source_height = self.source_size
         return (
-            _dist_to_round(target_width / source_width)**2
-            +
-            _dist_to_round(target_height / source_height)**2
-            )
+            _dist_to_round(target_width / source_width) ** 2
+            + _dist_to_round(target_height / source_height) ** 2
+        )
 
     @staticmethod
     def _margins(target_size, source_size, cell_number):
@@ -164,11 +157,15 @@ class Fuzzy(_Layout):
         if cell_number[0] == 1:
             width = decimal.Decimal(0)
         else:
-            width = (target_size[0] - cell_number[0] * source_size[0]) / (cell_number[0] - 1)
+            width = (target_size[0] - cell_number[0] * source_size[0]) / (
+                cell_number[0] - 1
+            )
         if cell_number[1] == 1:
             height = decimal.Decimal(0)
         else:
-            height = (target_size[1] - cell_number[1] * source_size[1]) / (cell_number[1] - 1)
+            height = (target_size[1] - cell_number[1] * source_size[1]) / (
+                cell_number[1] - 1
+            )
         return (width, height)
 
     def _grid(self, source_size, target_size):
@@ -181,7 +178,7 @@ class Fuzzy(_Layout):
             cell_number = (
                 max(1, round(target_size[0] / source_size[0])),
                 max(1, round(target_size[1] / source_size[1])),
-                )
+            )
         except decimal.DivisionByZero:
             raise errors.PdfautonupError("Error: A PDF page have a null dimension.")
         return self.Grid(
@@ -189,15 +186,17 @@ class Fuzzy(_Layout):
             target_size,
             self._margins(target_size, source_size, cell_number),
             self._gaps(target_size, source_size, cell_number),
-            )
+        )
 
     def cell_topleft(self, num):
         # pylint: disable=line-too-long
         width, height = self.grid.cell_number
         return (
-            self.grid.margins[0] + (self.source_size[0] + self.grid.gaps[0]) * (num % width),
-            self.grid.margins[1] + (self.source_size[1] + self.grid.gaps[1]) * (height - 1 - num // width),
-            )
+            self.grid.margins[0]
+            + (self.source_size[0] + self.grid.gaps[0]) * (num % width),
+            self.grid.margins[1]
+            + (self.source_size[1] + self.grid.gaps[1]) * (height - 1 - num // width),
+        )
 
     @property
     def pages_per_page(self):
@@ -210,7 +209,9 @@ class Panelize(_Layout):
     #: Define how the source page will fit into the destination page.
     #: - `margin` is the destination margin (including wasted space);
     #: - `sourcex` is the 'extended' source size (source size, together with gap).
-    Grid = namedtuple('Grid', ['margin', 'sourcex', 'dimension', 'target', 'pagenumber'])
+    Grid = namedtuple(
+        "Grid", ["margin", "sourcex", "dimension", "target", "pagenumber"]
+    )
 
     def __init__(self, source_size, target_size, arguments, metadata=None):
         # pylint: disable=too-many-arguments
@@ -224,15 +225,19 @@ class Panelize(_Layout):
             self.margin = arguments.margin[0]
 
         if arguments.orientation == "landscape":
-            self.grid = self._grid(source_size, papersize.rotate(target_size, papersize.LANDSCAPE))
+            self.grid = self._grid(
+                source_size, papersize.rotate(target_size, papersize.LANDSCAPE)
+            )
         elif arguments.orientation == "portrait":
-            self.grid = self._grid(source_size, papersize.rotate(target_size, papersize.PORTRAIT))
+            self.grid = self._grid(
+                source_size, papersize.rotate(target_size, papersize.PORTRAIT)
+            )
         else:
             self.grid = max(
                 self._grid(source_size, target_size),
                 self._grid(source_size, (target_size[1], target_size[0])),
-                key=operator.attrgetter('pagenumber'),
-                )
+                key=operator.attrgetter("pagenumber"),
+            )
 
         if self.pages_per_page == 0:
             raise errors.PdfautonupError(
@@ -246,19 +251,19 @@ class Panelize(_Layout):
         dimension = (
             self._num_fit(target[0], source[0]),
             self._num_fit(target[1], source[1]),
-            )
+        )
 
         wasted = (
             self._wasted(target[0], dimension[0], source[0]),
             self._wasted(target[1], dimension[1], source[1]),
-            )
+        )
         return self.Grid(
             margin=(self.margin + wasted[0], self.margin + wasted[1]),
             sourcex=(source[0] + self.gap, source[1] + self.gap),
             dimension=dimension,
             target=target,
-            pagenumber=dimension[0]*dimension[1],
-            )
+            pagenumber=dimension[0] * dimension[1],
+        )
 
     def _wasted(self, dest, num, source):
         """Return the amount of wasted space
@@ -284,4 +289,4 @@ class Panelize(_Layout):
         return (
             self.grid.margin[0] + self.grid.sourcex[0] * (num % width),
             self.grid.margin[1] + self.grid.sourcex[1] * (height - 1 - num // width),
-            )
+        )

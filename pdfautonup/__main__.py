@@ -29,15 +29,18 @@ import PyPDF2
 from pdfautonup import LOGGER
 from pdfautonup import errors, options, paper, geometry
 
+
 def lcm(a, b):
     """Return least common divisor of arguments"""
     # pylint: disable=invalid-name, deprecated-method
     return a * b / gcd(a, b)
 
+
 def _none_function(*args, **kwargs):
     """Accept any number of arguments. and does nothing."""
     # pylint: disable=unused-argument
     pass
+
 
 def _progress_printer(string):
     """Returns a function that prints the progress message."""
@@ -46,19 +49,19 @@ def _progress_printer(string):
         """Print progress message."""
         try:
             text = string.format(
-                page=page,
-                total=total,
-                percent=int(page*100/total),
-                )
-        except: # pylint: disable=bare-except
+                page=page, total=total, percent=int(page * 100 / total)
+            )
+        except:  # pylint: disable=bare-except
             text = string
         print(text, end="")
         sys.stdout.flush()
 
     return print_progress
 
+
 class PageIterator:
     """Iterator over pages of several pdf documents."""
+
     # pylint: disable=too-few-public-methods
 
     def __init__(self, files):
@@ -77,6 +80,7 @@ class PageIterator:
         for __ignored in range(int(num)):
             yield from self
 
+
 def _aggregate_metadata(files):
     """Aggregate metadata from input files."""
     input_info = [file.getDocumentInfo() for file in files]
@@ -86,25 +90,22 @@ def _aggregate_metadata(files):
         return input_info[0]
 
     for key in ["/Title", "/Author", "/Keywords", "/Creator", "/Subject"]:
-        values = set([
-            data[key]
-            for data
-            in input_info
-            if (key in data and data[key])
-            ])
+        values = set([data[key] for data in input_info if (key in data and data[key])])
         if values:
-            value = ', '.join(['“{}”'.format(item) for item in values])
+            value = ", ".join(["“{}”".format(item) for item in values])
             if len(values) != len(files):
                 value += ", and maybe others."
             output_info[NameObject(key)] = createStringObject(value)
     return output_info
+
 
 def rectangle_size(rectangle):
     """Return the dimension of rectangle (width, height)."""
     return (
         rectangle.upperRight[0] - rectangle.lowerLeft[0],
         rectangle.upperRight[1] - rectangle.lowerLeft[1],
-        )
+    )
+
 
 def add_extension(filename):
     """Return the argument, with the `.pdf` extension if missing.
@@ -118,6 +119,7 @@ def add_extension(filename):
             return extended
     return filename
 
+
 def nup(arguments, progress=_none_function):
     """Build destination file."""
     # pylint: disable=too-many-branches
@@ -128,9 +130,8 @@ def nup(arguments, progress=_none_function):
             input_files.append(PyPDF2.PdfFileReader(add_extension(pdf)))
         except (FileNotFoundError, PyPDF2.utils.PdfReadError, PermissionError) as error:
             raise errors.PdfautonupError(
-                "Error while reading file '{}': {}."
-                .format(pdf, error)
-                )
+                "Error while reading file '{}': {}.".format(pdf, error)
+            )
 
     pages = PageIterator(input_files)
 
@@ -150,26 +151,23 @@ def nup(arguments, progress=_none_function):
         else:
             fit = geometry.Panelize
     else:
-        fit = {
-            'fuzzy': geometry.Fuzzy,
-            'panel': geometry.Panelize,
-            }[arguments.algorithm]
+        fit = {"fuzzy": geometry.Fuzzy, "panel": geometry.Panelize}[arguments.algorithm]
 
     dest = fit(
         source_size,
         target_size,
         arguments=arguments,
         metadata=_aggregate_metadata(input_files),
-        )
+    )
 
-    if arguments.repeat == 'auto':
+    if arguments.repeat == "auto":
         if len(pages) == 1:
-            arguments.repeat = 'fit'
+            arguments.repeat = "fit"
         else:
             arguments.repeat = 1
     if isinstance(arguments.repeat, int):
         repeat = arguments.repeat
-    elif arguments.repeat == 'fit':
+    elif arguments.repeat == "fit":
         repeat = lcm(dest.pages_per_page, len(pages)) // len(pages)
 
     pagecount = 0
@@ -180,7 +178,10 @@ def nup(arguments, progress=_none_function):
         pagecount += 1
         progress(pagecount, pagetotal)
 
-    dest.write(options.destination_name(arguments.output, add_extension(arguments.files[0])))
+    dest.write(
+        options.destination_name(arguments.output, add_extension(arguments.files[0]))
+    )
+
 
 def main():
     """Main function"""
@@ -198,6 +199,7 @@ def main():
         sys.exit(1)
 
     sys.exit(0)
+
 
 if __name__ == "__main__":
     main()

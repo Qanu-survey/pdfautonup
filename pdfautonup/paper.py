@@ -21,13 +21,14 @@ import papersize
 
 from pdfautonup import errors
 
+
 def parse_lc_paper(string):
     """Parse LC_PAPER locale variable
 
     We assume units are milimeters.
     """
     dimensions = {}
-    for line in string.split('\n'):
+    for line in string.split("\n"):
         if line.startswith("width="):
             dimensions["width"] = papersize.parse_length("{}mm".format(line[6:]))
         if line.startswith("height="):
@@ -35,6 +36,7 @@ def parse_lc_paper(string):
     if len(dimensions) == 2:
         return (dimensions["width"], dimensions["height"])
     raise errors.CouldNotParse(string)
+
 
 def target_papersize(target_size):
     """Return the target paper size.
@@ -49,45 +51,45 @@ def target_papersize(target_size):
 
     # LC_PAPER environment variable (can be read from "locale -k LC_PAPER"
     try:
-        return parse_lc_paper(subprocess.check_output(
-            ["locale", "-k", "LC_PAPER"],
-            universal_newlines=True,
-            ))
+        return parse_lc_paper(
+            subprocess.check_output(
+                ["locale", "-k", "LC_PAPER"], universal_newlines=True
+            )
+        )
     except (FileNotFoundError, subprocess.CalledProcessError, errors.CouldNotParse):
         pass
 
     # PAPERSIZE environment variable
     try:
-        return papersize.parse_papersize(os.environ['PAPERSIZE'].strip())
+        return papersize.parse_papersize(os.environ["PAPERSIZE"].strip())
     except KeyError:
         pass
 
     # file described by the PAPERCONF environment variable
     try:
         return papersize.parse_papersize(
-            open(os.environ['PAPERCONF'], 'r').read().strip()
-            )
+            open(os.environ["PAPERCONF"], "r").read().strip()
+        )
     except errors.CouldNotParse:
         raise
-    except: # pylint: disable=bare-except
+    except:  # pylint: disable=bare-except
         pass
 
     # content of /etc/papersize
     try:
-        return papersize.parse_papersize(open('/etc/papersize', 'r').read().strip())
+        return papersize.parse_papersize(open("/etc/papersize", "r").read().strip())
     except errors.CouldNotParse:
         raise
-    except: # pylint: disable=bare-except
+    except:  # pylint: disable=bare-except
         pass
 
     # stdout of the paperconf command
     try:
-        return papersize.parse_papersize(subprocess.check_output(
-            ["paperconf"],
-            universal_newlines=True,
-            ).strip())
+        return papersize.parse_papersize(
+            subprocess.check_output(["paperconf"], universal_newlines=True).strip()
+        )
     except (FileNotFoundError, subprocess.CalledProcessError, errors.CouldNotParse):
         pass
 
     # Eventually, if everything else has failed, a4
-    return papersize.parse_papersize('a4')
+    return papersize.parse_papersize("a4")

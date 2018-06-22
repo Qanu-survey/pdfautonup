@@ -5,4 +5,9 @@ good-names=i,j,x,y,z
 #additional-builtins=_
 
 [MESSAGES CONTROL]
-disable= logging-format-interpolation, redefined-variable-type, I
+disable=
+  logging-format-interpolation,
+  redefined-variable-type,
+  I,
+  # Let black handle formatting
+  bad-continuation,

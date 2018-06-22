@@ -23,15 +23,15 @@ import sys
 
 import pdfautonup
 
+
 def load_tests(__loader, tests, __pattern):
     """Load tests (doctests).
     """
     # Loading doctests
     tests.addTests(doctest.DocTestSuite(pdfautonup))
     for module_finder, name, __is_pkg in pkgutil.walk_packages(
-            pdfautonup.__path__,
-            prefix="{}.".format(pdfautonup.__name__),
-        ):
+        pdfautonup.__path__, prefix="{}.".format(pdfautonup.__name__)
+    ):
         if name in sys.modules:
             module = sys.modules[name]
         else:

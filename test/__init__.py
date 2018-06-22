@@ -22,6 +22,7 @@ import unittest
 
 import pdfautonup
 
+
 def suite():
     """Return a :class:`TestSuite` object, testing all module :mod:`pdfautonup`.
     """
@@ -30,7 +31,8 @@ def suite():
         os.path.abspath(os.path.dirname(__file__)),
         pattern="*.py",
         top_level_dir=os.path.abspath(os.path.join(pdfautonup.__path__[0], "..")),
-        )
+    )
+
 
 if __name__ == "__main__":
     unittest.TextTestRunner().run(suite())

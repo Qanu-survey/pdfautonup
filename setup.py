@@ -21,40 +21,34 @@ from setuptools import setup, find_packages
 import codecs
 import os
 
+
 def readme():
     """Return the content of file README."""
-    directory = os.path.dirname(os.path.join(
-        os.getcwd(),
-        __file__,
-        ))
+    directory = os.path.dirname(os.path.join(os.getcwd(), __file__))
     with codecs.open(
         os.path.join(directory, "README.rst"),
         encoding="utf8",
         mode="r",
         errors="replace",
-        ) as file:
+    ) as file:
         return file.read()
 
+
 setup(
-    name='pdfautonup',
+    name="pdfautonup",
     version="1.0.0",
     packages=find_packages(exclude=["test*"]),
     setup_requires=["hgtools"],
-    install_requires=[
-        "PyPDF2",
-        "papersize",
-        ],
+    install_requires=["PyPDF2", "papersize"],
     include_package_data=True,
-    author='Louis Paternault',
-    author_email='spalax+python@gresille.org',
+    author="Louis Paternault",
+    author_email="spalax+python@gresille.org",
     description="Convert PDF files to 'n-up' PDF files, guessing the output layout.",
-    url='https://git.framasoft.org/spalax/pdfautonup',
+    url="https://git.framasoft.org/spalax/pdfautonup",
     license="GPLv3 or any later version",
     test_suite="test.suite",
-    entry_points={
-        'console_scripts': ['pdfautonup = pdfautonup.__main__:main']
-        },
-    keywords = "pdf nup",
+    entry_points={"console_scripts": ["pdfautonup = pdfautonup.__main__:main"]},
+    keywords="pdf nup",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
@@ -67,7 +61,7 @@ setup(
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Topic :: Printing",
-        ],
+    ],
     long_description=readme(),
-    zip_safe = True,
+    zip_safe=True,
 )

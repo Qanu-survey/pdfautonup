@@ -22,6 +22,7 @@ import papersize
 
 from pdfautonup import VERSION
 
+
 def length_type(text):
     """Check type of length (number plus optional unit).
 
@@ -31,6 +32,7 @@ def length_type(text):
         return papersize.parse_length(text)
     except papersize.CouldNotParse as error:
         raise argparse.ArgumentTypeError(str(error))
+
 
 def size_type(text):
     """Check type of paper size (couple of numbers plus optional units).
@@ -42,12 +44,13 @@ def size_type(text):
     except papersize.CouldNotParse as error:
         raise argparse.ArgumentTypeError(str(error))
 
+
 def repeat_type(text):
     """Check type of '--repeat' option.
 
     Must be either a positive integer, or 'fit' or 'auto'.
     """
-    if text in ['auto', 'fit']:
+    if text in ["auto", "fit"]:
         return text
     try:
         if int(text) > 0:
@@ -55,33 +58,41 @@ def repeat_type(text):
         else:
             raise ValueError
     except ValueError:
-        raise argparse.ArgumentTypeError(textwrap.dedent("""
+        raise argparse.ArgumentTypeError(
+            textwrap.dedent(
+                """
         Argument must be either 'fit' or 'auto', or a positive integer.
-        """))
+        """
+            )
+        )
+
 
 def progress_type(text):
     """Return plain progress text, turning aliases into their value."""
     return {
-        'dot': '.',
-        'percent': '{percent}%\n',
-        'pages': '{page}/{total}\n',
-        'none': '',
-        }.get(text, text)
+        "dot": ".",
+        "percent": "{percent}%\n",
+        "pages": "{page}/{total}\n",
+        "none": "",
+    }.get(text, text)
+
 
 class HelpPaper(argparse.Action):
     """Argparse action to display help about paper sizes."""
-    #: pylint: disable=too-few-public-methods
+
+    #: pylint: disable=too-few-public-methods, line-too-long
 
     def __init__(self, *args, **kwargs):
-        if 'nargs' in kwargs:
+        if "nargs" in kwargs:
             raise ValueError("nargs not allowed")
-        kwargs['nargs'] = 0
+        kwargs["nargs"] = 0
         super().__init__(*args, **kwargs)
 
     def __call__(self, *args, **kwargs):
         # pylint: disable=arguments-differ
         print(
-            textwrap.dedent("""
+            textwrap.dedent(
+                """
             # Source
 
             Paper size is read from the following sources (in that order):
@@ -102,156 +113,176 @@ class HelpPaper(argparse.Action):
             - Recognized paper size names are: {papersizenames}.
 
             For instance, A4 paper can be set using "--size=A4" or "--size=21cmx29.7cm".
-            """).format(
-                units=str(", ".join([
-                    size
-                    for size
-                    in sorted(papersize.UNITS.keys())
-                    if size
-                    ])),
+            """
+            )
+            .format(
+                units=str(
+                    ", ".join([size for size in sorted(papersize.UNITS.keys()) if size])
+                ),
                 papersizenames=str(", ".join(sorted(papersize.SIZES.keys()))),
-            ).strip()
+            )
+            .strip()
         )
         sys.exit(0)
 
+
 def commandline_parser():
     """Return a command line parser."""
+    # pylint: disable=line-too-long
 
     parser = argparse.ArgumentParser(
         prog="pdfautonup",
-        description=textwrap.dedent("""
-            Convert PDF files to 'n-up' file, with multiple input pages per
-            destination pages. The output size is configurable, and the program
-            compute the page layout, to fit as much source pages in per
-            destination pages as possible. If necessary, the source pages are
-            repeated to fill all destination pages.
-            """),
+        description=textwrap.dedent(
+            """\
+            Convert PDF files to 'n-up' file, with multiple input pages per destination pages. The output size is configurable, and the program compute the page layout, to fit as much source pages in per destination pages as possible. If necessary, the source pages are repeated to fill all destination pages.
+            """
+        ),
         formatter_class=argparse.RawTextHelpFormatter,
-        )
+    )
 
     parser.add_argument(
-        '--version',
-        help='Show version',
-        action='version',
-        version='%(prog)s ' + VERSION
-        )
+        "--version",
+        help="Show version",
+        action="version",
+        version="%(prog)s " + VERSION,
+    )
 
     parser.add_argument(
-        '--help-paper',
-        help='Show an help message about paper sizes, and exit.',
+        "--help-paper",
+        help="Show an help message about paper sizes, and exit.",
         action=HelpPaper,
-        )
+    )
 
     parser.add_argument(
-        'files',
+        "files",
         metavar="FILES",
         help=(
-            'PDF files to merge. If their page sizes are different, they are '
-            'considered to have the same page size, which is the maximum width '
-            'and height of all pages.'
-            ),
-        nargs='+',
+            "PDF files to merge. If their page sizes are different, they are "
+            "considered to have the same page size, which is the maximum width "
+            "and height of all pages."
+        ),
+        nargs="+",
         type=str,
-        )
+    )
 
     parser.add_argument(
-        '--output', '-o',
-        help=(
-            'Destination file. Default is "-nup" appended to first source file.'
-            ),
+        "--output",
+        "-o",
+        help=('Destination file. Default is "-nup" appended to first source file.'),
         type=str,
-        )
+    )
 
     parser.add_argument(
-        '--interactive', '-i',
-        help='Ask before overwriting destination file if it exists.',
+        "--interactive",
+        "-i",
+        help="Ask before overwriting destination file if it exists.",
         default=False,
-        action='store_true',
-        )
+        action="store_true",
+    )
 
     parser.add_argument(
-        '--algorithm', '-a',
-        help=textwrap.dedent("""\
+        "--algorithm",
+        "-a",
+        help=textwrap.dedent(
+            """\
             Algorithm used to arrange source documents into destination documents. This program tries to put as many copies of the source document into the destination document, given that:
             - `fuzzy`: documents can overlap, or leave blank spaces between them, but not too much;
             - `panel`: the gap length between documents is fixed, and a minimum destination margin is respected.
-            """),
+            """
+        ),
         default=None,
-        choices=['fuzzy', 'panel'],
-        )
+        choices=["fuzzy", "panel"],
+    )
 
     parser.add_argument(
-        '--orientation', '-O',
-        help=textwrap.dedent("""\
+        "--orientation",
+        "-O",
+        help=textwrap.dedent(
+            """\
             Destination paper orientation. Default is 'auto', which choose the paper orientation to fit the maximum number of source pages on the destination page.
-            """),
-        default='auto',
-        choices=['auto', 'portrait', 'landscape'],
-        )
+            """
+        ),
+        default="auto",
+        choices=["auto", "portrait", "landscape"],
+    )
 
     parser.add_argument(
-        '--size', '-s',
-        dest='target_size',
-        help='Target paper size (see below for accepted sizes).',
+        "--size",
+        "-s",
+        dest="target_size",
+        help="Target paper size (see below for accepted sizes).",
         default=None,
         nargs=1,
-        action='store',
+        action="store",
         type=size_type,
-        )
+    )
 
     parser.add_argument(
-        '--margin', '-m',
-        dest='margin',
-        help=textwrap.dedent("""\
+        "--margin",
+        "-m",
+        dest="margin",
+        help=textwrap.dedent(
+            """\
             Margin size.
-            """),
+            """
+        ),
         default=[None],
         nargs=1,
         type=length_type,
-        action='store',
-        )
+        action="store",
+    )
 
     parser.add_argument(
-        '--gap', '-g',
-        help=textwrap.dedent("""\
+        "--gap",
+        "-g",
+        help=textwrap.dedent(
+            """\
             Gap size.
-            """),
+            """
+        ),
         default=[None],
         type=length_type,
         nargs=1,
-        action='store',
-        )
+        action="store",
+    )
 
     parser.add_argument(
-        '--repeat', '-r',
-        help=textwrap.dedent("""
+        "--repeat",
+        "-r",
+        help=textwrap.dedent(
+            """
         Number of times the input files have to be repeated. Possible values are:
         - an integer;
         - 'fit': the input files are repeated enough time to leave no blank
           space in the output file.
         - 'auto': if there is only one input page, equivalent to 'fit'; else,
           equivalent to 1.
-        """),
+        """
+        ),
         type=repeat_type,
-        default='auto',
-        action='store',
-        )
+        default="auto",
+        action="store",
+    )
 
     parser.add_argument(
-        '--progress', '-p',
-        help=textwrap.dedent(r"""
+        "--progress",
+        "-p",
+        help=textwrap.dedent(
+            r"""
         Text to print after processing each page. Strings "{page}", "{pagetotal}", "{percent}" are replaced by their respective values. The following alias are defined:
         - 'none': no progress;
         - 'dot': '.';
         - 'pages': '{page}/{total}\n';
         - 'percent': '{percent}%%\n'.
-        """),
+        """
+        ),
         type=progress_type,
         default="",
         action="store",
-        )
+    )
 
     return parser
+
 
 def destination_name(output, source):
     """Return the name of the destination file.
@@ -261,5 +292,5 @@ def destination_name(output, source):
     :param str source: Name of the first source file.
     """
     if output is None:
-        return "{}-nup.pdf".format(".".join(source.split('.')[:-1]))
+        return "{}-nup.pdf".format(".".join(source.split(".")[:-1]))
     return output
