@@ -1,6 +1,7 @@
 * pdfautonup 1.1.0 (unreleased)
 
     * Drop python3.4 support.
+    * Python3.7 support
 
     -- Louis Paternault <spalax+python@gresille.org>
 
