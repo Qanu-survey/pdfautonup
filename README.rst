@@ -1,8 +1,6 @@
 pdfautonup 🍳 n-up the pages of pdf files, guessing layout
 ==========================================================
 
-|sources| |pypi| |build| |coverage| |documentation| |license|
-
     **Note:** It's 2018, and this project is still maintained: I has very few updates, because it *just works*, but I use it daily.
 
 Fit as much pages as possible, from some PDF files to a 'n-up' PDF file of a given page size, guessing the layout.
@@ -54,18 +52,3 @@ Documentation
 * To compile it from source, download and run::
 
       cd doc && make html
-
-
-.. |documentation| image:: http://readthedocs.org/projects/pdfautonup/badge
-  :target: http://pdfautonup.readthedocs.io
-.. |pypi| image:: https://img.shields.io/pypi/v/pdfautonup.svg
-  :target: http://pypi.python.org/pypi/pdfautonup
-.. |license| image:: https://img.shields.io/pypi/l/pdfautonup.svg
-  :target: http://www.gnu.org/licenses/gpl-3.0.html
-.. |sources| image:: https://img.shields.io/badge/sources-pdfautonup-brightgreen.svg
-  :target: http://git.framasoft.org/spalax/pdfautonup
-.. |coverage| image:: https://git.framasoft.org/spalax/pdfautonup/badges/master/coverage.svg
-  :target: https://git.framasoft.org/spalax/pdfautonup/builds
-.. |build| image:: https://git.framasoft.org/spalax/pdfautonup/badges/master/build.svg
-  :target: https://git.framasoft.org/spalax/pdfautonup/builds
-
