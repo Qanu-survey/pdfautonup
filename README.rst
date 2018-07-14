@@ -3,6 +3,8 @@ pdfautonup 🍳 n-up the pages of pdf files, guessing layout
 
 |sources| |pypi| |build| |coverage| |documentation| |license|
 
+    **Note:** It's 2018, and this project is still maintained: I has very few updates, because it *just works*, but I use it daily.
+
 Fit as much pages as possible, from some PDF files to a 'n-up' PDF file of a given page size, guessing the layout.
 
 Examples
