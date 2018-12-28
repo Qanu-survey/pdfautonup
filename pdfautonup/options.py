@@ -55,8 +55,7 @@ def repeat_type(text):
     try:
         if int(text) > 0:
             return int(text)
-        else:
-            raise ValueError
+        raise ValueError
     except ValueError:
         raise argparse.ArgumentTypeError(
             textwrap.dedent(

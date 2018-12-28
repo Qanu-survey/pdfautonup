@@ -90,7 +90,7 @@ def _aggregate_metadata(files):
         return input_info[0]
 
     for key in ["/Title", "/Author", "/Keywords", "/Creator", "/Subject"]:
-        values = set([data[key] for data in input_info if (key in data and data[key])])
+        values = {data[key] for data in input_info if (key in data and data[key])}
         if values:
             value = ", ".join(["“{}”".format(item) for item in values])
             if len(values) != len(files):

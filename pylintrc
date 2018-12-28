@@ -9,5 +9,6 @@ disable=
   logging-format-interpolation,
   redefined-variable-type,
   I,
+  unnecessary-pass,
   # Let black handle formatting
   bad-continuation,
