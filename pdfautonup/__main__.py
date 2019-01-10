@@ -20,7 +20,7 @@ try:
     from math import gcd
 except ImportError:
     from fractions import gcd
-import os
+import io
 import sys
 
 from PyPDF2.generic import NameObject, createStringObject
@@ -107,19 +107,6 @@ def rectangle_size(rectangle):
     )
 
 
-def add_extension(filename):
-    """Return the argument, with the `.pdf` extension if missing.
-
-    If `filename` does not exist, but `filename.pdf` does exist, return the
-    latter. Otherwise (even if it does not exist), return the former.
-    """
-    if not os.path.exists(filename):
-        extended = "{}.pdf".format(filename)
-        if os.path.exists(extended):
-            return extended
-    return filename
-
-
 def nup(arguments, progress=_none_function):
     """Build destination file."""
     # pylint: disable=too-many-branches
@@ -127,7 +114,12 @@ def nup(arguments, progress=_none_function):
     input_files = list()
     for pdf in arguments.files:
         try:
-            input_files.append(PyPDF2.PdfFileReader(add_extension(pdf)))
+            if pdf == "-":
+                input_files.append(
+                    PyPDF2.PdfFileReader(io.BytesIO(sys.stdin.buffer.read()))
+                )
+            else:
+                input_files.append(PyPDF2.PdfFileReader(pdf))
         except (FileNotFoundError, PyPDF2.utils.PdfReadError, PermissionError) as error:
             raise errors.PdfautonupError(
                 "Error while reading file '{}': {}.".format(pdf, error)
@@ -178,14 +170,19 @@ def nup(arguments, progress=_none_function):
         pagecount += 1
         progress(pagecount, pagetotal)
 
-    dest.write(
-        options.destination_name(arguments.output, add_extension(arguments.files[0]))
-    )
+    dest.write(arguments.output, arguments.files[0])
 
 
 def main():
     """Main function"""
     arguments = options.commandline_parser().parse_args(sys.argv[1:])
+
+    if "-" in arguments.files and arguments.interactive:
+        LOGGER.error(
+            """Cannot ask user input while reading files from standard input. """
+            """Try removing the "--interactive" (or "-i") option."""
+        )
+        sys.exit(1)
 
     try:
         nup(arguments, progress=_progress_printer(arguments.progress))

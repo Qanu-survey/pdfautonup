@@ -16,8 +16,10 @@
 
 from collections import namedtuple
 import decimal
+import io
 import operator
 import os
+import sys
 
 from PyPDF2.generic import NameObject, createStringObject
 import PyPDF2
@@ -58,13 +60,27 @@ class _Layout:
         self.current_page.mergeTranslatedPage(page, x, y)
         self.current_pagenum = (self.current_pagenum + 1) % self.pages_per_page
 
-    def write(self, filename):
+    def write(self, outputname, inputname):
         """Write destination file."""
-        if self.interactive and os.path.exists(filename):
-            question = "File {} already exists. Overwrite (y/[n])? ".format(filename)
+        # I wonder whether this functions should be woved in another module, or
+        # not: it is the only function dealing with file system in this module.
+
+        if outputname is None and inputname == "-":
+            outputname = "-"
+        elif outputname is None:
+            outputname = "{}-nup.pdf".format(inputname[: -len(".pdf")])
+
+        if outputname != "-" and self.interactive and os.path.exists(outputname):
+            question = "File {} already exists. Overwrite (y/[n])? ".format(outputname)
             if input(question).lower() != "y":
                 raise errors.PdfautonupError("Cancelled by user.")
-        self.pdf.write(open(filename, "w+b"))
+
+        if outputname == "-":
+            output = io.BytesIO()
+            self.pdf.write(output)
+            sys.stdout.buffer.write(output.getvalue())
+        else:
+            self.pdf.write(open(outputname, "w+b"))
 
     def _set_metadata(self, metadata):
         """Set metadata on current pdf."""

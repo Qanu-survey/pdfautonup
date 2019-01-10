@@ -2,6 +2,7 @@
 
     * Drop python3.4 support.
     * Python3.7 support
+    * Can read and write from standard input and input (closes #12).
 
     -- Louis Paternault <spalax+python@gresille.org>
 

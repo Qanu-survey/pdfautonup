@@ -15,6 +15,7 @@
 """Manage options"""
 
 import argparse
+import os
 import sys
 import textwrap
 
@@ -74,6 +75,21 @@ def progress_type(text):
         "pages": "{page}/{total}\n",
         "none": "",
     }.get(text, text)
+
+
+def inputfile_type(filename):
+    """Return the argument, with the `.pdf` extension if missing (and if argument is not "-").
+
+    If `filename` does not exist, but `filename.pdf` does exist, return the
+    latter. Otherwise (even if it does not exist), return the former.
+    """
+    if filename == "-":
+        return filename
+    if not os.path.exists(filename):
+        extended = "{}.pdf".format(filename)
+        if os.path.exists(extended):
+            return extended
+    return filename
 
 
 class HelpPaper(argparse.Action):
@@ -158,17 +174,21 @@ def commandline_parser():
         help=(
             "PDF files to merge. If their page sizes are different, they are "
             "considered to have the same page size, which is the maximum width "
-            "and height of all pages."
+            """and height of all pages. To read from standard input, use "-"."""
         ),
-        nargs="+",
-        type=str,
+        nargs="*",
+        type=inputfile_type,
+        default=["-"],
     )
 
     parser.add_argument(
         "--output",
         "-o",
-        help=('Destination file. Default is "-nup" appended to first source file.'),
+        help=(
+            'Destination file (or "-" to write to standard output). Default is "-nup" appended to first source file (excepted if first source file is standard input, where default output is standard output).'
+        ),
         type=str,
+        nargs="?",
     )
 
     parser.add_argument(
@@ -281,15 +301,3 @@ def commandline_parser():
     )
 
     return parser
-
-
-def destination_name(output, source):
-    """Return the name of the destination file.
-
-    :param str output: Filename, given in command line options. May be
-        ``None`` if it was not provided.
-    :param str source: Name of the first source file.
-    """
-    if output is None:
-        return "{}-nup.pdf".format(".".join(source.split(".")[:-1]))
-    return output
