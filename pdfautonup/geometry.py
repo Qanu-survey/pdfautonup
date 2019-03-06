@@ -16,13 +16,11 @@
 
 from collections import namedtuple
 import decimal
-import io
 import operator
 import os
 import sys
 
-from PyPDF2.generic import NameObject, createStringObject
-import PyPDF2
+import fitz
 import papersize
 
 from pdfautonup import LOGGER
@@ -35,16 +33,13 @@ def _dist_to_round(x):
 
 
 class _Layout:
-    def __init__(self, target_size, arguments, metadata=None):
+    def __init__(self, target_size, arguments):
         self.target_size = target_size
         self.interactive = arguments.interactive
 
-        self.pdf = PyPDF2.PdfFileWriter()
+        self.pdf = fitz.Document()
         self.current_pagenum = 0
         self.current_page = None
-
-        if metadata is not None:
-            self._set_metadata(metadata)
 
     def add_page(self, page):
         """Add ``page`` to the destination file.
@@ -53,17 +48,27 @@ class _Layout:
         necessary.
         """
         if self.current_pagenum == 0:
-            self.current_page = self.pdf.addBlankPage(
-                width=self.target_size[0], height=self.target_size[1]
+            self.current_page = self.pdf.newPage(
+                width=int(self.target_size[0]), height=int(self.target_size[1])
             )
         (x, y) = self.cell_topleft(self.current_pagenum)
-        self.current_page.mergeTranslatedPage(page, x, y)
+        self.current_page.showPDFpage(
+            fitz.Rect(
+                x,
+                y,
+                x + decimal.Decimal(page.MediaBoxSize.x),
+                y + decimal.Decimal(page.MediaBoxSize.y),
+            ),
+            page.parent,
+            page.number,
+        )
         self.current_pagenum = (self.current_pagenum + 1) % self.pages_per_page
 
-    def write(self, outputname, inputname):
+    def write(self, outputname, inputname, *, metadata):
         """Write destination file."""
         # I wonder whether this functions should be woved in another module, or
         # not: it is the only function dealing with file system in this module.
+        self._set_metadata(metadata)
 
         if outputname is None and inputname == "-":
             outputname = "-"
@@ -76,32 +81,16 @@ class _Layout:
                 raise errors.PdfautonupError("Cancelled by user.")
 
         if outputname == "-":
-            output = io.BytesIO()
-            self.pdf.write(output)
-            sys.stdout.buffer.write(output.getvalue())
+            sys.stdout.buffer.write(self.pdf.write())
         else:
-            self.pdf.write(open(outputname, "w+b"))
+            self.pdf.save(outputname)
 
     def _set_metadata(self, metadata):
         """Set metadata on current pdf."""
-        # Source:
-        #    http://two.pairlist.net/pipermail/reportlab-users/2009-November/009033.html
-        try:
-            # pylint: disable=protected-access, no-member
-            # Since we are accessing to a protected membre, which can no longer exist
-            # in a future version of PyPDF2, we prevent errors.
-            infodict = self.pdf._info.getObject()
-            infodict.update(metadata)
-            infodict.update(
-                {
-                    NameObject("/Producer"): createStringObject(
-                        "pdfautonup, using the PyPDF2 library — "
-                        "http://git.framasoft.org/spalax/pdfautonup"
-                    )
-                }
-            )
-        except AttributeError:
-            LOGGER.warning("Could not copy metadata from source document.")
+        metadata[
+            "producer"
+        ] = "pdfautonup, using the PyPDF2 library — http://framagit.org/spalax/pdfautonup"
+        self.pdf.setMetadata(metadata)
 
     def cell_topleft(self, num):
         """Return the top left coordinate of ``num``th cell of page."""
@@ -120,7 +109,7 @@ class Fuzzy(_Layout):
     #: in it, per width and height (``cell_number[0]`` and ``cell_number[1]``).
     Grid = namedtuple("Grid", ["cell_number", "target_size", "margins", "gaps"])
 
-    def __init__(self, source_size, target_size, arguments, metadata=None):
+    def __init__(self, source_size, target_size, arguments):
         if arguments.margin[0] is not None or arguments.gap[0] is not None:
             LOGGER.warning(
                 "Arguments `--margin` and `--gap` are ignored with algorithm `fuzzy`."
@@ -141,7 +130,7 @@ class Fuzzy(_Layout):
                 key=self.ugliness,
             )
 
-        super().__init__(self.grid.target_size, arguments, metadata)
+        super().__init__(self.grid.target_size, arguments)
 
     def ugliness(self, grid):
         """Return the "ugliness" of this ``grid``.
@@ -211,7 +200,7 @@ class Fuzzy(_Layout):
             self.grid.margins[0]
             + (self.source_size[0] + self.grid.gaps[0]) * (num % width),
             self.grid.margins[1]
-            + (self.source_size[1] + self.grid.gaps[1]) * (height - 1 - num // width),
+            + (self.source_size[1] + self.grid.gaps[1]) * (num // width),
         )
 
     @property
@@ -229,7 +218,7 @@ class Panelize(_Layout):
         "Grid", ["margin", "sourcex", "dimension", "target", "pagenumber"]
     )
 
-    def __init__(self, source_size, target_size, arguments, metadata=None):
+    def __init__(self, source_size, target_size, arguments):
         # pylint: disable=too-many-arguments
         if arguments.gap[0] is None:
             self.gap = papersize.parse_length("0")
@@ -261,7 +250,7 @@ class Panelize(_Layout):
                 "source page into destination page."
             )
 
-        super().__init__(self.grid.target, arguments, metadata)
+        super().__init__(self.grid.target, arguments)
 
     def _grid(self, source, target):
         dimension = (
@@ -304,5 +293,5 @@ class Panelize(_Layout):
         width, height = self.grid.dimension
         return (
             self.grid.margin[0] + self.grid.sourcex[0] * (num % width),
-            self.grid.margin[1] + self.grid.sourcex[1] * (height - 1 - num // width),
+            self.grid.margin[1] + self.grid.sourcex[1] * (num // width),
         )

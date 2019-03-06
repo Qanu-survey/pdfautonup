@@ -20,11 +20,11 @@ try:
     from math import gcd
 except ImportError:
     from fractions import gcd
+from decimal import Decimal
 import io
 import sys
 
-from PyPDF2.generic import NameObject, createStringObject
-import PyPDF2
+import fitz
 
 from pdfautonup import LOGGER
 from pdfautonup import errors, options, paper, geometry
@@ -33,7 +33,7 @@ from pdfautonup import errors, options, paper, geometry
 def lcm(a, b):
     """Return least common divisor of arguments"""
     # pylint: disable=invalid-name, deprecated-method
-    return a * b / gcd(a, b)
+    return (a * b) // gcd(a, b)
 
 
 def _none_function(*args, **kwargs):
@@ -60,78 +60,71 @@ def _progress_printer(string):
 
 
 class PageIterator:
-    """Iterator over pages of several pdf documents."""
+    """Iterator over pages of several PDF files."""
 
-    # pylint: disable=too-few-public-methods
-
-    def __init__(self, files):
-        self.files = files
+    def __init__(self, filenames):
+        self.files = []
+        for name in filenames:
+            try:
+                if name == "-":
+                    self.files.append(
+                        fitz.open(
+                            stream=io.BytesIO(sys.stdin.buffer.read()),
+                            filetype="application/pdf",
+                        )
+                    )
+                else:
+                    self.files.append(fitz.open(name))
+            except (FileNotFoundError, PermissionError) as error:
+                raise errors.PdfautonupError(
+                    "Error while reading file '{}': {}.".format(name, error)
+                )
+            except RuntimeError as error:
+                raise errors.PdfautonupError(
+                    "Error: Malformed file '{}': {}.".format(name, error)
+                )
 
     def __iter__(self):
         for pdf in self.files:
-            for num in range(pdf.numPages):
-                yield pdf.getPage(num)
+            yield from pdf
 
     def __len__(self):
-        return sum([pdf.numPages for pdf in self.files])
+        return sum(pdf.pageCount for pdf in self.files)
 
-    def repeat_iterator(self, num):
-        """Iterator over pages, repeated ``num`` times."""
-        for __ignored in range(int(num)):
+    def repeat(self, num):
+        """Iterator over pages, repeated `num` times."""
+        for __ in range(num):
             yield from self
 
+    def metadata(self):
+        """Aggregate metadata from input files."""
+        if len(self.files) == 1:
+            return self.files[0].metadata
 
-def _aggregate_metadata(files):
-    """Aggregate metadata from input files."""
-    input_info = [file.getDocumentInfo() for file in files]
-    output_info = PyPDF2.pdf.DocumentInformation()
-
-    if len(files) == 1:
-        return input_info[0]
-
-    for key in ["/Title", "/Author", "/Keywords", "/Creator", "/Subject"]:
-        values = {data[key] for data in input_info if (key in data and data[key])}
-        if values:
-            value = ", ".join(["“{}”".format(item) for item in values])
-            if len(values) != len(files):
-                value += ", and maybe others."
-            output_info[NameObject(key)] = createStringObject(value)
-    return output_info
-
-
-def rectangle_size(rectangle):
-    """Return the dimension of rectangle (width, height)."""
-    return (
-        rectangle.upperRight[0] - rectangle.lowerLeft[0],
-        rectangle.upperRight[1] - rectangle.lowerLeft[1],
-    )
+        input_info = [pdf.metadata for pdf in self.files]
+        output_info = dict()
+        for key in ["title", "author", "keywords", "creator", "producer"]:
+            values = (
+                data[key]
+                for data in input_info
+                if (key in data and (data[key] is not None))
+            )
+            if values:
+                output_info[key] = " / ".join(["“{}”".format(item) for item in values])
+        return output_info
 
 
 def nup(arguments, progress=_none_function):
     """Build destination file."""
     # pylint: disable=too-many-branches
 
-    input_files = list()
-    for pdf in arguments.files:
-        try:
-            if pdf == "-":
-                input_files.append(
-                    PyPDF2.PdfFileReader(io.BytesIO(sys.stdin.buffer.read()))
-                )
-            else:
-                input_files.append(PyPDF2.PdfFileReader(pdf))
-        except (FileNotFoundError, PyPDF2.utils.PdfReadError, PermissionError) as error:
-            raise errors.PdfautonupError(
-                "Error while reading file '{}': {}.".format(pdf, error)
-            )
-
-    pages = PageIterator(input_files)
+    pages = PageIterator(arguments.files)
 
     if not pages:
         raise errors.PdfautonupError("Error: PDF files have no pages to process.")
 
-    page_sizes = list(zip(*[rectangle_size(page.mediaBox) for page in pages]))
-    source_size = (max(page_sizes[0]), max(page_sizes[1]))
+    page_sizes = list(zip(*[page.MediaBoxSize for page in pages]))
+    source_size = (Decimal(max(page_sizes[0])), Decimal(max(page_sizes[1])))
     target_size = paper.target_papersize(arguments.target_size)
 
     if [len(set(page_sizes[i])) for i in (0, 1)] != [1, 1]:
@@ -145,12 +138,7 @@ def nup(arguments, progress=_none_function):
     else:
         fit = {"fuzzy": geometry.Fuzzy, "panel": geometry.Panelize}[arguments.algorithm]
 
-    dest = fit(
-        source_size,
-        target_size,
-        arguments=arguments,
-        metadata=_aggregate_metadata(input_files),
-    )
+    dest = fit(source_size, target_size, arguments=arguments)
 
     if arguments.repeat == "auto":
         if len(pages) == 1:
@@ -163,14 +151,14 @@ def nup(arguments, progress=_none_function):
         repeat = lcm(dest.pages_per_page, len(pages)) // len(pages)
 
     pagecount = 0
-    pagetotal = int(repeat * len(pages))
+    pagetotal = repeat * len(pages)
     progress(pagecount, pagetotal)
-    for page in pages.repeat_iterator(repeat):
+    for page in pages.repeat(repeat):
         dest.add_page(page)
         pagecount += 1
         progress(pagecount, pagetotal)
 
-    dest.write(arguments.output, arguments.files[0])
+    dest.write(arguments.output, arguments.files[0], metadata=pages.metadata())
 
 
 def main():

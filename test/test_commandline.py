@@ -58,7 +58,7 @@ FIXTURES = [
     {
         "command": [os.path.join(TEST_DATA_DIR, "malformed.pdf")],
         "returncode": 1,
-        "stderr": "Error while reading file '{}': Could not read malformed PDF file.\n".format(
+        "stderr": "Error: Malformed file '{}': no objects found.\n".format(
             os.path.join(TEST_DATA_DIR, "malformed.pdf")
         ),
     },
