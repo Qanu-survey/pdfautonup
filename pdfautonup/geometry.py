@@ -195,7 +195,7 @@ class Fuzzy(_Layout):
 
     def cell_topleft(self, num):
         # pylint: disable=line-too-long
-        width, height = self.grid.cell_number
+        width, __height = self.grid.cell_number
         return (
             self.grid.margins[0]
             + (self.source_size[0] + self.grid.gaps[0]) * (num % width),
@@ -290,7 +290,7 @@ class Panelize(_Layout):
         return self.grid.dimension[0] * self.grid.dimension[1]
 
     def cell_topleft(self, num):
-        width, height = self.grid.dimension
+        width, __height = self.grid.dimension
         return (
             self.grid.margin[0] + self.grid.sourcex[0] * (num % width),
             self.grid.margin[1] + self.grid.sourcex[1] * (num // width),
