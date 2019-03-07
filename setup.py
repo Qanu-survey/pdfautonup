@@ -39,7 +39,7 @@ setup(
     version="1.0.0",
     packages=find_packages(exclude=["test*"]),
     setup_requires=["hgtools"],
-    install_requires=["PyPDF2", "papersize"],
+    install_requires=["PyMuPDF", "papersize"],
     include_package_data=True,
     author="Louis Paternault",
     author_email="spalax+python@gresille.org",

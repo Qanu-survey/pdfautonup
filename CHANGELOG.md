@@ -1,8 +1,14 @@
 * pdfautonup 1.1.0 (unreleased)
 
-    * Drop python3.4 support.
-    * Python3.7 support
-    * Can read and write from standard input and input (closes #12).
+    * Python support
+      * Drop python3.4 support.
+      * Python3.7 support
+    * Dependencies
+      * Replace PyPDF2 dependency with PyMuPDF.
+    * Features and Bugs
+      * Pdfautonup is faster (closes #9).
+      * Can read and write from standard input and input (closes #12).
+      * Pages are cropped before being merged (closes #13).
 
     -- Louis Paternault <spalax+python@gresille.org>
 
