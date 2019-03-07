@@ -49,7 +49,7 @@ class _Layout:
         """
         if self.current_pagenum == 0:
             self.current_page = self.pdf.newPage(
-                width=int(self.target_size[0]), height=int(self.target_size[1])
+                width=round(self.target_size[0]), height=round(self.target_size[1])
             )
         (x, y) = self.cell_topleft(self.current_pagenum)
         self.current_page.showPDFpage(
