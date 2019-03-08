@@ -1,4 +1,4 @@
-* pdfautonup 1.1.0 (unreleased)
+* pdfautonup 1.1.0 (2019-03-08)
 
     * Python support
       * Drop python3.4 support.
