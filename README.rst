@@ -35,9 +35,9 @@ See the end of list for a (quick and dirty) Debian package.
 
     pip install pdfautonup
 
-* Quick and dirty Debian (and Ubuntu?) package
+* ~~Quick and dirty Debian (and Ubuntu?) package~~ This is broken because `pymupdf <https://pypi.org/p/pymupdf>`_ is not packages for Debian…
 
-  This requires `stdeb <https://github.com/astraw/stdeb>`_ to be installed::
+  This requires `stdeb <https://github.com/astraw/stdeb>`_ and `hgtools <https://pypi.org/p/hgtools>`_ to be installed::
 
       python3 setup.py --command-packages=stdeb.command bdist_deb
       sudo dpkg -i deb_dist/pdfautonup-<VERSION>_all.deb
