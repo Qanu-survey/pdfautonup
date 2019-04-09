@@ -38,7 +38,7 @@ setup(
     name="pdfautonup",
     version="1.1.0",
     packages=find_packages(exclude=["test*"]),
-    setup_requires=["hgtools"],
+    setup_requires=["setuptools_scm"],
     install_requires=["PyMuPDF", "papersize"],
     include_package_data=True,
     author="Louis Paternault",
