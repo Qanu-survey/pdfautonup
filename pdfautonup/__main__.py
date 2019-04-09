@@ -36,10 +36,8 @@ def lcm(a, b):
     return (a * b) // gcd(a, b)
 
 
-def _none_function(*args, **kwargs):
+def _none_function(*args, **kwargs):  # pylint: disable=unused-argument
     """Accept any number of arguments. and does nothing."""
-    # pylint: disable=unused-argument
-    pass
 
 
 def _progress_printer(string):
