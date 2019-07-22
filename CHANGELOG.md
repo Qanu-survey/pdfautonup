@@ -1,3 +1,11 @@
+* pdfautonup 1.2.0 (unreleased)
+
+    * Python support
+      * Drop python3.6 support.
+      * Add python3.8 support
+
+    -- Louis Paternault <spalax+python@gresille.org>
+
 * pdfautonup 1.1.0 (2019-03-08)
 
     * Python support
