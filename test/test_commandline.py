@@ -1,4 +1,4 @@
-# Copyright 2017 Louis Paternault
+# Copyright 2017-2019 Louis Paternault
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -93,6 +93,13 @@ class TestCommandLine(unittest.TestCase):
         for (pagea, pageb) in zip(images[0].sequence, images[1].sequence):
             self.assertEqual(pagea.compare(pageb, metric="absolute")[1], 0)
 
+    @unittest.skipIf(
+        # I would like to get rid of this, but ImageMagick seems to produce
+        # different pixel-to-pixel conversions from pdf to png in python3.5 and
+        # python3.7.
+        sys.version_info < (3, 7),
+        "Tests require python version 3.7 or higher.",
+    )
     def test_commandline(self):
         """Test binary, from command line to produced files."""
         for data in FIXTURES:
