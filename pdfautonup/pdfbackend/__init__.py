@@ -15,6 +15,8 @@
 
 """Abstract classes to read and write PDF files."""
 
+PDFBACKENDS = ["auto", "pymupdf", "pypdf2"]
+
 METADATA_KEYS = ["title", "author", "keywords", "creator", "producer"]
 
 

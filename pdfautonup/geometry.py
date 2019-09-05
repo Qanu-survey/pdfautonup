@@ -21,11 +21,11 @@ import os
 
 import papersize
 
-# TODO: Make it agnostic
-from pdfautonup.pdfbackend.pypdf2 import PDFFileWriter
-
 from pdfautonup import LOGGER
 from pdfautonup import errors
+from pdfautonup.pdfbackend.auto import (
+    PDFFileWriter,
+)  # pylint: disable=no-name-in-module
 
 
 def _dist_to_round(x):

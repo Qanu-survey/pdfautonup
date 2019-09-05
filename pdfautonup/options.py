@@ -22,6 +22,7 @@ import textwrap
 import papersize
 
 from pdfautonup import VERSION
+from pdfautonup import pdfbackend
 
 
 def length_type(text):
@@ -153,6 +154,17 @@ def commandline_parser():
             """
         ),
         formatter_class=argparse.RawTextHelpFormatter,
+        epilog=textwrap.dedent(
+            """\
+                The backend Python library used to read and write PDF files can be forced using the environment variable BACKEND. If this variable is not defined (or defined with an invalid value), a library is automatically (and silently) chosen. Available libraries are: {}.
+                """.format(
+                ", ".join(
+                    "'{}'".format(item)
+                    for item in pdfbackend.PDFBACKENDS
+                    if item != "auto"
+                )
+            )
+        ),
     )
 
     parser.add_argument(

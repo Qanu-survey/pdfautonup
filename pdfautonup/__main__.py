@@ -23,12 +23,12 @@ except ImportError:
 from decimal import Decimal
 import sys
 
-# TODO: Make it agnostic
-from pdfautonup.pdfbackend.pypdf2 import PDFFileReader
-from pdfautonup.pdfbackend import METADATA_KEYS
 
+from pdfautonup.pdfbackend.auto import (
+    PDFFileReader,
+)  # pylint: disable=no-name-in-module
 from pdfautonup import LOGGER
-from pdfautonup import errors, options, paper, geometry
+from pdfautonup import errors, options, paper, geometry, pdfbackend
 
 
 def lcm(a, b):
@@ -105,7 +105,7 @@ class PageIterator:
 
         input_info = [pdf.metadata for pdf in self.files]
         output_info = dict()
-        for key in METADATA_KEYS:
+        for key in pdfbackend.METADATA_KEYS:
             values = (
                 data[key]
                 for data in input_info
@@ -169,16 +169,16 @@ def nup(arguments, progress=_none_function):
 
 def main():
     """Main function"""
-    arguments = options.commandline_parser().parse_args(sys.argv[1:])
-
-    if "-" in arguments.files and arguments.interactive:
-        LOGGER.error(
-            """Cannot ask user input while reading files from standard input. """
-            """Try removing the "--interactive" (or "-i") option."""
-        )
-        sys.exit(1)
-
     try:
+        arguments = options.commandline_parser().parse_args(sys.argv[1:])
+
+        if "-" in arguments.files and arguments.interactive:
+            LOGGER.error(
+                """Cannot ask user input while reading files from standard input. """
+                """Try removing the "--interactive" (or "-i") option."""
+            )
+            sys.exit(1)
+
         nup(arguments, progress=_progress_printer(arguments.progress))
         if not (arguments.progress.endswith("\n") or arguments.progress == ""):
             print()
