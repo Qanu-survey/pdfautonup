@@ -1,0 +1,5 @@
+- Documentation : How to install, How to choose, Which backend to use
+- requirements.txt: Install pymupdf or pypdf2
+- setup.py: Install pypdf2, and optionnaly pymupdf
+- README: Check and add the debian package instruction
+- Test both backends
