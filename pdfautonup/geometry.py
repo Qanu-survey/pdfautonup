@@ -1,4 +1,4 @@
-# Copyright Louis Paternault 2011-2017
+# Copyright Louis Paternault 2011-2019
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -10,7 +10,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>. 1
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """Different algorithm to fit source files into destination files."""
 
@@ -18,10 +18,11 @@ from collections import namedtuple
 import decimal
 import operator
 import os
-import sys
 
-import fitz
 import papersize
+
+# TODO: Make it agnostic
+from pdfautonup.pdfbackend.pymupdf import PDFFileWriter
 
 from pdfautonup import LOGGER
 from pdfautonup import errors
@@ -37,7 +38,7 @@ class _Layout:
         self.target_size = target_size
         self.interactive = arguments.interactive
 
-        self.pdf = fitz.Document()
+        self.pdf = PDFFileWriter()
         self.current_pagenum = 0
         self.current_page = None
 
@@ -48,20 +49,11 @@ class _Layout:
         necessary.
         """
         if self.current_pagenum == 0:
-            self.current_page = self.pdf.newPage(
+            self.current_page = self.pdf.new_page(
                 width=round(self.target_size[0]), height=round(self.target_size[1])
             )
         (x, y) = self.cell_topleft(self.current_pagenum)
-        self.current_page.showPDFpage(
-            fitz.Rect(
-                x,
-                y,
-                x + decimal.Decimal(page.MediaBoxSize.x),
-                y + decimal.Decimal(page.MediaBoxSize.y),
-            ),
-            page.parent,
-            page.number,
-        )
+        self.current_page.merge_translated_page(page, x, y)
         self.current_pagenum = (self.current_pagenum + 1) % self.pages_per_page
 
     def write(self, outputname, inputname, *, metadata):
@@ -81,16 +73,16 @@ class _Layout:
                 raise errors.PdfautonupError("Cancelled by user.")
 
         if outputname == "-":
-            sys.stdout.buffer.write(self.pdf.write())
+            self.pdf.write()
         else:
-            self.pdf.save(outputname)
+            self.pdf.write(outputname)
 
     def _set_metadata(self, metadata):
         """Set metadata on current pdf."""
         metadata[
             "producer"
         ] = "pdfautonup, using the PyPDF2 library — http://framagit.org/spalax/pdfautonup"
-        self.pdf.setMetadata(metadata)
+        self.pdf.metadata = metadata
 
     def cell_topleft(self, num):
         """Return the top left coordinate of ``num``th cell of page."""
