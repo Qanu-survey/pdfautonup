@@ -22,7 +22,7 @@ import os
 import papersize
 
 # TODO: Make it agnostic
-from pdfautonup.pdfbackend.pymupdf import PDFFileWriter
+from pdfautonup.pdfbackend.pypdf2 import PDFFileWriter
 
 from pdfautonup import LOGGER
 from pdfautonup import errors

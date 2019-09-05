@@ -15,6 +15,8 @@
 
 """Abstract classes to read and write PDF files."""
 
+METADATA_KEYS = ["title", "author", "keywords", "creator", "producer"]
+
 
 class AbstractPDFFileReader:
     """PDF file reader."""
@@ -64,10 +66,12 @@ class AbstractPDFFileWriter:
 class AbstractPDFPage:
     """Page of a PDF file."""
 
-    # pylint: disable=too-few-public-methods
+    def __init__(self, page):
+        super().__init__()
+        self._page = page
 
     @property
-    def mediabox(self):
+    def mediabox_size(self):
         """Return the media box size (as a tuple)."""
         raise NotImplementedError()
 

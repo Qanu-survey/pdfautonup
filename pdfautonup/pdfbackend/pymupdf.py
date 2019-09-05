@@ -78,11 +78,7 @@ class PDFFileWriter(AbstractPDFFileWriter):
 
 
 class PDFPage(AbstractPDFPage):
-    """Page of a PDF file."""
-
-    def __init__(self, page):
-        super().__init__()
-        self._page = page
+    """Page of a PDF file (using PyMuPDF)."""
 
     @property
     def parent(self):
@@ -95,7 +91,7 @@ class PDFPage(AbstractPDFPage):
         return self._page.number
 
     @property
-    def mediabox(self):
+    def mediabox_size(self):
         return self._page.MediaBoxSize
 
     def merge_translated_page(self, page, x, y):
@@ -103,8 +99,8 @@ class PDFPage(AbstractPDFPage):
             fitz.Rect(
                 x,
                 y,
-                x + decimal.Decimal(page.mediabox.x),
-                y + decimal.Decimal(page.mediabox.y),
+                x + decimal.Decimal(page.mediabox_size.x),
+                y + decimal.Decimal(page.mediabox_size.y),
             ),
             page.parent,
             page.number,

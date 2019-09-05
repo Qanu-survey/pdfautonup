@@ -24,7 +24,8 @@ from decimal import Decimal
 import sys
 
 # TODO: Make it agnostic
-from pdfautonup.pdfbackend.pymupdf import PDFFileReader
+from pdfautonup.pdfbackend.pypdf2 import PDFFileReader
+from pdfautonup.pdfbackend import METADATA_KEYS
 
 from pdfautonup import LOGGER
 from pdfautonup import errors, options, paper, geometry
@@ -104,7 +105,7 @@ class PageIterator:
 
         input_info = [pdf.metadata for pdf in self.files]
         output_info = dict()
-        for key in ["title", "author", "keywords", "creator", "producer"]:
+        for key in METADATA_KEYS:
             values = (
                 data[key]
                 for data in input_info
@@ -124,7 +125,7 @@ def nup(arguments, progress=_none_function):
         if not pages:
             raise errors.PdfautonupError("Error: PDF files have no pages to process.")
 
-        page_sizes = list(zip(*[page.mediabox for page in pages]))
+        page_sizes = list(zip(*[page.mediabox_size for page in pages]))
         source_size = (Decimal(max(page_sizes[0])), Decimal(max(page_sizes[1])))
         target_size = paper.target_papersize(arguments.target_size)
 
