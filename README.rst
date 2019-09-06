@@ -35,9 +35,15 @@ See the end of list for a (quick and dirty) Debian package.
 
     pip install pdfautonup
 
-* ~~Quick and dirty Debian (and Ubuntu?) package~~ This is broken because `pymupdf <https://pypi.org/p/pymupdf>`_ is not packages for Debian…
+  Note: If `PyMuPDF <https://github.com/pymupdf/PyMuPDF>`_ can be installed, you can use::
 
-  This requires `stdeb <https://github.com/astraw/stdeb>`_ to be installed::
+    pip install pdfautonup[pymupdf]
+
+  This will change the python library used to read and write PDF files (`PyMuPDF <https://github.com/pymupdf/PyMuPDF>`_ instead of `PyPDF2 <http://mstamy2.github.io/PyPDF2/>`_), to make pdfautonup faster.
+
+* Quick and dirty Debian (and Ubuntu?) package
+
+  This requires `stdeb <https://github.com/astraw/stdeb>`_ (and `setuptools-scm <https://pypi.org/project/setuptools-scm/>`_) to be installed::
 
       python3 setup.py --command-packages=stdeb.command bdist_deb
       sudo dpkg -i deb_dist/pdfautonup-<VERSION>_all.deb
