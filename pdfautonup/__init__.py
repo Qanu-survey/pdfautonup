@@ -1,4 +1,4 @@
-# Copyright Louis Paternault 2014-2017
+# Copyright Louis Paternault 2014-2019
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +16,7 @@
 
 import logging
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 __AUTHOR__ = "Louis Paternault (spalax+python@gresille.org)"
 __COPYRIGHT__ = "(C) 2014-2019 Louis Paternault. GNU GPL 3 or later."
 
