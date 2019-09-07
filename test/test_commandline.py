@@ -51,17 +51,17 @@ FIXTURES = [
         "diff": ("trigo-nup.pdf", "trigo-control.pdf"),
     },
     {
+        "command": [os.path.join(TEST_DATA_DIR, "trigo.pdf")],
+        "env": {"PDFBACKEND": "pypdf2"},
+        "returncode": 0,
+        "diff": ("trigo-nup.pdf", "trigo-control-pypdf2.pdf"),
+    },
+    {
         "command": [os.path.join(TEST_DATA_DIR, "three-pages.pdf")],
         "returncode": 0,
         "diff": ("three-pages-nup.pdf", "three-pages-control.pdf"),
     },
-    {
-        "command": [os.path.join(TEST_DATA_DIR, "malformed.pdf")],
-        "returncode": 1,
-        "stderr": "Error: Malformed file '{}': no objects found.\n".format(
-            os.path.join(TEST_DATA_DIR, "malformed.pdf")
-        ),
-    },
+    {"command": [os.path.join(TEST_DATA_DIR, "malformed.pdf")], "returncode": 1},
     {
         "command": [os.path.join(TEST_DATA_DIR, "zero-pages.pdf")],
         "returncode": 1,
@@ -109,6 +109,7 @@ class TestCommandLine(unittest.TestCase):
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     universal_newlines=True,
+                    env=data.get("env", None),
                 )
 
                 for key in ["returncode", "stderr", "stdout"]:
