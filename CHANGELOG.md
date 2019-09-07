@@ -1,3 +1,9 @@
+* pdfautonup 1.2.1 (unreleased)
+
+    * Fix typo in documentation.
+
+    -- Louis Paternault <spalax+python@gresille.org>
+
 * pdfautonup 1.2.0 (2019-09-07)
 
     * Python support
