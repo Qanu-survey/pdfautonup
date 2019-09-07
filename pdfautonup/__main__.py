@@ -24,9 +24,9 @@ from decimal import Decimal
 import sys
 
 
-from pdfautonup.pdfbackend.auto import (
+from pdfautonup.pdfbackend.auto import (  # pylint: disable=no-name-in-module
     PDFFileReader,
-)  # pylint: disable=no-name-in-module
+)
 from pdfautonup import LOGGER
 from pdfautonup import errors, options, paper, geometry, pdfbackend
 
