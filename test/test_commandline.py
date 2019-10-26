@@ -112,6 +112,7 @@ class TestCommandLine(unittest.TestCase):
                     stderr=subprocess.PIPE,
                     universal_newlines=True,
                     env=env,
+                    check=False,
                 )
 
                 for key in ["returncode", "stderr", "stdout"]:
