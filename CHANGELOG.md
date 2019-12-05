@@ -8,6 +8,7 @@
 
     * Python support
       * Drop python3.6 support.
+      * Add python3.8 support
     * It is now possible to choose the Python library used to read and write
       PDF files (closes #14).
 
