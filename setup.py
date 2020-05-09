@@ -50,7 +50,7 @@ setup(
     test_suite="test.suite",
     entry_points={"console_scripts": ["pdfautonup = pdfautonup.__main__:main"]},
     keywords="pdf nup",
-    python_requires=">=3.5",
+    python_requires=">=3.5, <4",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
