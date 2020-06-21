@@ -2,7 +2,7 @@
 
     * Fix typo in documentation.
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 1.2.0 (2019-09-07)
 
@@ -12,7 +12,7 @@
     * It is now possible to choose the Python library used to read and write
       PDF files (closes #14).
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 1.1.0 (2019-03-08)
 
@@ -26,13 +26,13 @@
       * Can read and write from standard input and input (closes #12).
       * Pages are cropped before being merged (closes #13).
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 1.0.0 (2017-12-06)
 
     * Log a warning if pages have different sizes.
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 0.4.3 (2017-03-11)
 
@@ -42,26 +42,26 @@
     * Add regression tests.
     * Minor internal improvements.
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 0.4.2 (2016-10-14)
 
     * Move help about paper sizes into a separate "--help-paper" option.
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 0.4.1 (2016-05-21)
 
     * Fix error in changelog.
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 0.4.0 (2016-05-21)
 
     * Raise error instead of producing a PDF with no pages (closes #7).
     * Add option `--progress` (closes #8).
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 0.3.0 (2016-02-18)
 
@@ -71,7 +71,7 @@
     * Fix centering and margin problems with the `fuzzy` (old) algorithm.
     * Minor documentation improvements
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 0.2.0 (2016-01-25)
 
@@ -79,7 +79,7 @@
     * Fix error when `paperconf` is not installed (closes #3).
     * Add `.pdf` to argument if missing (closes #4).
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 0.1.1 (2015-06-13)
 
@@ -89,10 +89,10 @@
     * Added project URL to generated pdf metadata
     * Several minor improvements to setup, test and documentation.
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
 
 * pdfautonup 0.1.0 (2015-03-20)
 
     * First published version.
 
-    -- Louis Paternault <spalax+python@gresille.org>
+    -- Louis Paternault <spalax@gresille.org>
