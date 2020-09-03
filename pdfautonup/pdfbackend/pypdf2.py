@@ -40,7 +40,7 @@ def _metadata2dict(pdf):
         key: raw["/{}".format(key.capitalize())]
         for key in METADATA_KEYS
         if "/{}".format(key.capitalize()) in raw
-    }
+    } if raw else {}
 
 
 class PDFFileReader(AbstractPDFFileReader):
